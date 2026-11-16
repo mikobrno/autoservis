@@ -1,0 +1,38 @@
+# PODKLADY – co chybí od Dennise (a co udělat mimo web)
+
+Stav k 16. 11. 2026. Vše je v kódu označené `// TODO(podklady)`.
+
+## Musí být před spuštěním
+
+- [ ] **Telefon:** web má +420 737 020 324, Google profil +420 774 883 911. Které platí? Sjednotit všude
+      (web, Google, Instagram) — nejednotný telefon škodí lokálnímu SEO. → `src/lib/contact.ts`
+- [ ] **WhatsApp** na hlavním čísle — ano/ne? → `business.whatsapp`
+- [ ] **IČO** a **e-mail** pro objednávky (+ e-mail pro notifikace z Netlify Forms). → `contact.ts`
+- [ ] **Plátce DPH?** (kvůli „ceny konečné") → `business.vatPayer`
+- [ ] **Ceník** — alespoň „od" ceny: diagnostika, výměna oleje, DSG olej, destičky, kotouče+destičky, tlumiče,
+      řemen+kladky, příprava na STK, přezutí, přezutí pneu na disky, vyvážení, defekt, prověrka (výjezd / dílna),
+      hodinová sazba, příplatky (SUV, dodávka). → `src/lib/pricing.ts`
+- [ ] **Prověrka:** potvrdit checklist (`src/lib/inspection.ts`) — hlavně tloušťkoměr laku, prověření historie
+      (Cebia / jiná služba — kdo ji platí?), dosah výjezdu („Frýdek-Místek a okolí" — kolik km?), cena dojezdu.
+- [ ] **Doba uchování údajů** v zásadách (navrženo 3 roky). → `ochrana-osobnich-udaju`
+- [ ] **Přístup k doméně autoservisdk.cz** (registrátor, DNS) a k současnému WordPress hostingu → přepojení na Netlify.
+
+## Hodilo by se
+
+- [ ] **Portrét Dennise** v dílně (na /o-mne a do hero).
+- [ ] **Originály fotek** z Google profilu (Jaguar, BMW E60, Fiat, podvozek) ve vyšším rozlišení.
+- [ ] Další zakázky (fotka + co zákazník řešil + co jsem našel + co jsem udělal). → `src/lib/jobs.ts`
+- [ ] **Reservio** (nebo jiný kalendář) — založit účet, služby: přezutí, olej, příprava na STK, prověrka v dílně.
+      Odkaz → `bookingUrl` v `contact.ts`.
+- [ ] Logo ve vektoru, pokud existuje (na rámečcích SPZ je „DK AUTOSERVIS · servis · údržba · diagnostika").
+- [ ] Pneuhotel / úschova kol — nabízí? Pak doplnit na /pneuservis.
+- [ ] GA4 měření — chceme? → `NEXT_PUBLIC_GA_ID` v Netlify (bez něj se cookie lišta vůbec neukáže).
+
+## Mimo web (Milan + Dennis)
+
+- [ ] **Google Business Profile:** sjednotit telefon, doplnit fotky, kategorie „Autoservis" + „Pneuservis",
+      odkaz na nový web, popis s prověrkou ojetin. Po každé zakázce poprosit o recenzi
+      (odkaz „Napsat recenzi" je na webu i v `googleWriteReviewUrl`).
+- [ ] **firmy.cz** — Dennis tam vůbec není (zdarma, Seznam = velká část místního hledání).
+- [ ] Instagram — do bia odkaz na nový web.
+- [ ] Po spuštění: Google Search Console + odeslat sitemap, ověřit 301 ze starých adres (`/sluzby/` → `/servis`).

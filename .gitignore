@@ -1,0 +1,27 @@
+node_modules
+.next
+.audit-screens
+.audit-screens-after
+.audit-screens-polish
+
+# Lokální proměnné prostředí — do repozitáře nepatří (šablona je v .env.example)
+.env
+.env.local
+.env*.local
+
+# Vercel
+.vercel
+
+# Build artefakty TypeScriptu
+tsconfig.tsbuildinfo
+next-env.d.ts
+
+# Local Netlify folder
+.netlify
+
+# Zdrojové obrázky pro design (velké PNG)
+.design-src
+.shots
+
+# Snímky obrazovky z kontrol
+.shots

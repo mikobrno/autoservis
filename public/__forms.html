@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8" />
+    <title>Definice formulářů pro Netlify</title>
+    <meta name="robots" content="noindex, nofollow" />
+  </head>
+  <body>
+    <!--
+      Netlify hledá formuláře ve statickém HTML při buildu. Stránky Next.js ale
+      generuje serverová funkce, takže by je tu nenašlo — tenhle soubor je proto
+      jediné místo, kde jsou formuláře deklarované. React komponenta
+      (src/components/ServiceRequestForm.tsx) na něj odesílá data přes fetch.
+      Pole se musí jmenovat stejně jako ve formuláři.
+    -->
+    <form name="objednavka" data-netlify="true" data-netlify-honeypot="company" hidden>
+      <input type="text" name="type" />
+      <input type="text" name="name" />
+      <input type="tel" name="phone" />
+      <input type="email" name="email" />
+      <input type="text" name="car" />
+      <input type="text" name="plate" />
+      <input type="url" name="listing" />
+      <input type="text" name="location" />
+      <input type="text" name="package" />
+      <input type="text" name="preferredDate" />
+      <textarea name="message"></textarea>
+      <input type="text" name="consent" />
+      <input type="text" name="company" />
+      <!-- `subject` přepisuje předmět notifikačního e-mailu z Netlify -->
+      <input type="hidden" name="subject" />
+    </form>
+  </body>
+</html>

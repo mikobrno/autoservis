@@ -1,0 +1,19 @@
+# Konfigurace nasazení na Netlify.
+# Next.js runtime (@netlify/plugin-nextjs) si Netlify doplňuje sám — díky němu
+# fungují API routes, trvalá přesměrování i optimalizace obrázků.
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Verzi Node fixujeme, ať build nepřestane fungovat, až Netlify posune výchozí.
+  NODE_VERSION = "22"
+
+# Pozor: [[headers]] se uplatní jen na statické soubory servírované z CDN.
+# Stránky generuje Next.js funkce, kterou tahle pravidla minou — bezpečnostní
+# hlavičky jsou proto v next.config.ts, kde je aplikuje samotný Next.js.
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

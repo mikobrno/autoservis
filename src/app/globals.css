@@ -1,0 +1,196 @@
+@import "tailwindcss";
+
+/* =====================================================
+   DESIGN SYSTEM – DK Autoservis
+   Vychází z dílny samotné: tmavý grafit, studeně bílá
+   šestiúhelníková LED světla na stropě a jantarová
+   „kontrolka“ jako jediná signální barva (tlačítka,
+   zvýraznění). Stavové barvy OK / pozor / vada patří
+   jen k prověrkám a reportům. Detail v docs/DESIGN.md.
+   ===================================================== */
+
+:root {
+  --background: #f4f4f1;
+  --foreground: #16191e;
+  /* Systémové písmo – nic se nestahuje, na každém zařízení vypadá „domácky". */
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* Tmavé plochy (hlavička, hero, patička, tmavé sekce) */
+  --color-ink: #0c0e11;          /* nejtmavší pozadí */
+  --color-graphite: #14171c;     /* tmavé sekce */
+  --color-steel: #1d2228;        /* karty na tmavém */
+  --color-line: #2d343d;         /* linky a rámečky na tmavém */
+  --color-fog: #a3acb6;          /* sekundární text na tmavém (7,6 : 1 na graphite) */
+
+  /* Světlé plochy */
+  --color-paper: #f4f4f1;        /* výchozí pozadí stránky */
+  --color-card: #ffffff;
+  --color-mist: #e8e9e5;         /* jemné oddělení ploch */
+  --color-slate: #4a525c;        /* sekundární text na světlém (7,4 : 1 na paper) */
+
+  /* Signální barva – „kontrolka“. Text na ní je vždy tmavý (ink 11 : 1). */
+  --color-amber: #ffb21e;
+  --color-amber-dark: #e89a00;
+  --color-amber-soft: #fff1d1;
+
+  /* Stavy prověrky */
+  --color-ok: #1f9d55;
+  --color-ok-soft: #dcf5e6;
+  --color-warn: #c77700;
+  --color-warn-soft: #fff0d6;
+  --color-bad: #d23b3b;
+  --color-bad-soft: #fde2e2;
+
+  --radius-card: 0.875rem;
+  --radius-card-lg: 1.25rem;
+
+  --font-sans: var(--font-body);
+  --font-display: var(--font-heading);
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: var(--font-heading), "Arial Narrow", Arial, sans-serif;
+    letter-spacing: -0.005em;
+    line-height: 1.05;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), "Segoe UI", Arial, sans-serif;
+  overflow-wrap: break-word;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Kotvy (#objednat…) nesmí zajet pod lepicí hlavičku. */
+  scroll-padding-top: 5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Na mobilu je dole pevná lišta Zavolat · WhatsApp · Objednat – obsah pod ní nesmí zmizet. */
+@media (max-width: 767px) {
+  body {
+    padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* -------------------------------------------------------
+   Přístupnost
+   ------------------------------------------------------- */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100px;
+  z-index: 100;
+  border-radius: 0.5rem;
+  background: var(--color-amber);
+  color: var(--color-ink);
+  padding: 0.75rem 1rem;
+  font-weight: 700;
+}
+.skip-link:focus {
+  top: 1rem;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-amber);
+  outline-offset: 2px;
+}
+
+/* -------------------------------------------------------
+   Kicker – malý nadpis nad H1/H2 („// servis“)
+   ------------------------------------------------------- */
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-heading), Arial, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.kicker::before {
+  content: "";
+  width: 0.7rem;
+  height: 0.8rem;
+  background: var(--color-amber);
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+}
+
+/* -------------------------------------------------------
+   Šestiúhelníkový vzor – ozvěna LED světel z dílny
+   ------------------------------------------------------- */
+.hex-glow {
+  filter: drop-shadow(0 0 6px rgba(225, 238, 255, 0.55)) drop-shadow(0 0 18px rgba(190, 215, 255, 0.25));
+}
+
+/* Text v článcích (případovky, zásady) */
+.prose-dk p {
+  margin-top: 1rem;
+  line-height: 1.7;
+}
+.prose-dk h2 {
+  margin-top: 2.5rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+.prose-dk h3 {
+  margin-top: 1.75rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+.prose-dk ul {
+  margin-top: 1rem;
+  list-style: disc;
+  padding-left: 1.25rem;
+}
+.prose-dk li {
+  margin-top: 0.4rem;
+  line-height: 1.6;
+}
+.prose-dk a {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* <details> v FAQ – vlastní šipka místo výchozího trojúhelníku */
+details > summary {
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+details[open] .faq-icon {
+  transform: rotate(45deg);
+}
