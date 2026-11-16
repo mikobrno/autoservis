@@ -5,6 +5,7 @@ import ContactCard from '@/components/ContactCard';
 import CtaBand from '@/components/CtaBand';
 import FaqList from '@/components/FaqList';
 import GoogleRating from '@/components/GoogleRating';
+import HeroLights from '@/components/HeroLights';
 import JobCard from '@/components/JobCard';
 import MapEmbed from '@/components/MapEmbed';
 import ProcessSteps from '@/components/ProcessSteps';
@@ -30,7 +31,7 @@ const pillars = [
   {
     href: '/pneuservis',
     title: 'Pneuservis',
-    text: 'Přezutí, vyvážení, oprava defektu. Při tom zkontroluji i brzdy.',
+    text: `Výměna kol ${formatPrice(getPrice('prezuti-kola'))}, přezutí pneumatik ${formatPrice(getPrice('prezuti-pneu'))}, defekty.`,
     image: { src: '/images/dilna-bmw-e60.webp', alt: 'BMW mezi sloupy zvedáku, v pozadí pneumatiky' },
   },
   {
@@ -52,7 +53,7 @@ export default function HomePage() {
 
   return (
     <>
-      {/* HERO – na mobilu fotka přes celou šířku a text na ní, od lg dva sloupce */}
+      {/* HERO – na mobilu fotka nahoře, od lg dva sloupce. HeroLights = „rozsvícení dílny“. */}
       <section className="relative overflow-hidden bg-ink text-white">
         <div className="relative mx-auto max-w-6xl lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-12 lg:px-6 lg:py-16">
           {/* Na mobilu fotka nahoře jako pás s výřezem na auto, na desktopu karta vpravo. */}
@@ -66,6 +67,7 @@ export default function HomePage() {
               className="object-cover object-[50%_62%] lg:object-center"
             />
             <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink to-transparent lg:hidden" aria-hidden="true" />
+            <HeroLights />
           </div>
 
           <div className="relative -mt-8 px-4 pb-10 sm:px-6 lg:order-1 lg:mt-0 lg:p-0">
@@ -73,7 +75,7 @@ export default function HomePage() {
               {business.city} · {business.street}
             </p>
             <h1 className="mt-3 font-display text-[2.75rem] font-bold uppercase leading-[0.95] sm:text-6xl lg:text-7xl">
-              Autoservis, kde víte, <span className="text-amber">za co platíte</span>
+              Autoservis, kde víte, <span className="dk-neon text-amber">za co platíte</span>
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">
               Jmenuji se {business.ownerFirstName} a na Palkovické opravuji auta. Než cokoliv vyměním, ukážu vám, co je

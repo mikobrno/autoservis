@@ -26,7 +26,7 @@ export default function Footer() {
         <div className="lg:col-span-1">
           <Logo />
           <p className="mt-5 text-sm leading-relaxed text-fog">
-            Autoservis a pneuservis na Palkovické ve Frýdku-Místku. Servis, opravy a prověrka ojetých aut před koupí.
+            Poctivý autoservis a pneuservis ve Frýdku-Místku. Servis, opravy, přezutí a prověrka ojetých aut před koupí.
           </p>
           <div className="mt-6 flex flex-col items-start gap-3">
             <GoogleRating onDark />

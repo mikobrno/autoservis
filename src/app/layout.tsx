@@ -54,8 +54,20 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="cs">
+    // suppressHydrationWarning: skript níže může před hydratací přidat na <html> třídu dk-lights-seen.
+    <html lang="cs" suppressHydrationWarning>
       <head>
+        {/* Efekt „rozsvícení dílny“ jen jednou za návštěvu – rozhodnout ještě před vykreslením. */}
+        <script
+          dangerouslySetInnerHTML={{
+            // ?svetla v adrese = přehrát efekt znovu (na předvádění).
+            __html: `try{var s=sessionStorage;if(/[?&]svetla/.test(location.search)){s.removeItem('dk-lights')}else if(s.getItem('dk-lights')){document.documentElement.classList.add('dk-lights-seen')}}catch(e){}`,
+          }}
+        />
+        {/* Bez JavaScriptu se efekt nespustí – fotka nesmí zůstat zhasnutá. */}
+        <noscript>
+          <style>{`.dk-lights-dark,.dk-lights-bloom{display:none}.dk-neon{opacity:1}`}</style>
+        </noscript>
         <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(localBusinessJsonLd())} />
         <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(webSiteJsonLd())} />
       </head>

@@ -96,6 +96,84 @@ html {
   }
 }
 
+/* -------------------------------------------------------
+   „Rozsvícení dílny" – při prvním otevření úvodní stránky je
+   fotka dílny potemnělá a LED světla naskočí jako zářivky.
+   Animuje se jen opacity (GPU, nezdržuje LCP), jednou za
+   návštěvu (třída .dk-lights-seen, viz HeroLights.tsx a skript
+   v layout.tsx) a nic z toho se neděje při prefers-reduced-motion.
+   ------------------------------------------------------- */
+@keyframes dk-lights-dark {
+  0% { opacity: 0.93; animation-timing-function: step-end; }
+  24% { opacity: 0.32; animation-timing-function: step-end; }
+  29% { opacity: 0.9; animation-timing-function: step-end; }
+  38% { opacity: 0.18; animation-timing-function: step-end; }
+  43% { opacity: 0.78; animation-timing-function: ease-out; }
+  72%, 100% { opacity: 0; }
+}
+@keyframes dk-lights-bloom {
+  0%, 42% { opacity: 0; }
+  54% { opacity: 1; }
+  100% { opacity: 0; }
+}
+/* Jantarová slova v nadpisu se rozsvítí se světly jako neon. */
+@keyframes dk-neon {
+  0% { opacity: 0.35; text-shadow: none; animation-timing-function: step-end; }
+  24% { opacity: 0.8; animation-timing-function: step-end; }
+  29% { opacity: 0.4; animation-timing-function: step-end; }
+  43% { opacity: 1; text-shadow: 0 0 18px rgba(255, 178, 30, 0.55); animation-timing-function: ease-out; }
+  100% { opacity: 1; text-shadow: none; }
+}
+/* Před startem (fotka se ještě načítá) je dílna „zhasnutá" a nápis ztlumený. */
+.dk-lights-dark { opacity: 0.93; }
+.dk-lights-bloom { opacity: 0; }
+.dk-neon { opacity: 0.35; }
+/* Start přidá HeroLights.tsx třídou dk-lights-go na <html>, až je fotka načtená. */
+.dk-lights-go .dk-lights-dark { animation: dk-lights-dark 2s both; }
+.dk-lights-go .dk-lights-bloom { animation: dk-lights-bloom 2s ease-out both; }
+.dk-lights-go .dk-neon { animation: dk-neon 2s both; }
+.dk-lights-seen .dk-lights-dark,
+.dk-lights-seen .dk-lights-bloom { display: none; }
+.dk-lights-seen .dk-neon { animation: none; opacity: 1; }
+
+/* Šestiúhelníky v úvodu podstránek naskakují jako jednotlivé zářivky. */
+@keyframes dk-tube {
+  0% { opacity: 0; }
+  40% { opacity: 0.9; }
+  48% { opacity: 0.15; }
+  60%, 100% { opacity: 1; }
+}
+.dk-tube { animation: dk-tube 0.7s step-end both; }
+
+/* Logo: šestiúhelník se obkreslí a krátce zazáří jantarovou. Obvod ≈ 137. */
+@keyframes dk-logo-draw { from { stroke-dashoffset: 137; } to { stroke-dashoffset: 0; } }
+@keyframes dk-logo-glow {
+  0%, 100% { filter: none; }
+  45% { filter: drop-shadow(0 0 7px rgba(255, 178, 30, 0.85)); }
+}
+.dk-logo-hex { stroke-dasharray: 137; animation: dk-logo-draw 0.8s ease-out 0.1s both; }
+.dk-logo-mark { animation: dk-logo-glow 1.1s ease-out 0.7s both; }
+
+/* Vypnuté animace v systému (ve Windows častá volba): bez blikání a kreslení,
+   dílna se jen plynule rozsvítí – prolnutí není pohyb. !important a vyšší
+   specificita přebijí globální pravidlo animation-duration: 0.01ms výše. */
+@keyframes dk-lights-fade {
+  0%, 15% { opacity: 0.93; }
+  100% { opacity: 0; }
+}
+@keyframes dk-neon-fade {
+  0%, 15% { opacity: 0.35; }
+  100% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dk-lights-go .dk-lights-dark { animation: dk-lights-fade 1.4s ease-out both !important; }
+  .dk-lights-go .dk-neon { animation: dk-neon-fade 1.4s ease-out both !important; }
+  .dk-lights-bloom { display: none; }
+  .dk-tube,
+  .dk-logo-hex,
+  .dk-logo-mark { animation: none !important; }
+}
+
 /* Na mobilu je dole pevná lišta Zavolat · WhatsApp · Objednat – obsah pod ní nesmí zmizet. */
 @media (max-width: 767px) {
   body {

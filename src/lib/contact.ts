@@ -29,7 +29,8 @@ export const business = {
   instagram: 'dk_autoservis_',
   /** Pokud Dennis WhatsApp na tomhle čísle nepoužívá, nastavit na false – odkazy zmizí. */
   whatsapp: true, // TODO(podklady): potvrdit WhatsApp na hlavním čísle
-  vatPayer: null as boolean | null, // TODO(podklady): plátce DPH? (ceny uvádíme konečné)
+  /** Z Dennisova ceníku na Google profilu: „Nejsme plátci DPH." */
+  vatPayer: false,
 };
 
 /** Otevírací doba podle Google profilu (stav k 16. 11. 2026). */

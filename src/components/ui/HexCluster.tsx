@@ -30,6 +30,8 @@ type HexClusterProps = {
   stroke?: string;
   strokeWidth?: number;
   glow?: boolean;
+  /** Šestiúhelníky naskočí postupně jako zářivky (CSS .dk-tube). */
+  animated?: boolean;
 };
 
 export default function HexCluster({
@@ -37,6 +39,7 @@ export default function HexCluster({
   stroke = '#eef4ff',
   strokeWidth = 3,
   glow = true,
+  animated = false,
 }: HexClusterProps) {
   const r = 40;
   const pad = 8;
@@ -56,9 +59,12 @@ export default function HexCluster({
       aria-hidden="true"
       focusable="false"
     >
-      {cells.map((cell) => (
+      {cells.map((cell, index) => (
         <polygon
           key={cell.key}
+          className={animated ? 'dk-tube' : undefined}
+          // Pevné „náhodné“ pořadí (stejné na serveru i v prohlížeči) – zářivky nenaskakují popořadě.
+          style={animated ? { animationDelay: `${150 + ((index * 7) % 11) * 70}ms` } : undefined}
           points={hexPoints(cell.cx, cell.cy, r)}
           stroke={stroke}
           strokeWidth={strokeWidth}

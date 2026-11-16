@@ -24,7 +24,7 @@ export default function PageHero({ kicker, title, lead, breadcrumbs, image, asid
 
   return (
     <section className="relative overflow-hidden bg-graphite text-white">
-      <HexCluster className="pointer-events-none absolute -right-24 -top-16 w-[520px] opacity-15 max-md:hidden" />
+      <HexCluster animated className="pointer-events-none absolute -right-24 -top-16 w-[520px] opacity-15 max-md:hidden" />
       <div
         className={`relative mx-auto grid max-w-6xl gap-8 px-4 pb-10 pt-6 sm:px-6 md:pb-20 md:pt-10 lg:gap-10 ${
           hasSide ? 'lg:grid-cols-[1.15fr_0.85fr] lg:items-center' : ''

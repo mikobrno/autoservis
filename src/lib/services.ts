@@ -211,22 +211,23 @@ export const getService = (slug: string) => services.find((service) => service.s
 /** Pneuservis má vlastní stránku /pneuservis. */
 export const tyreServices: Array<{ name: string; text: string; priceKey?: string }> = [
   {
-    name: 'Přezutí pneumatik',
-    text: 'Přezutí letních a zimních kol – kola na discích i přezutí pneumatik na disky. Při tom zkontroluji hloubku dezénu a stáří pneumatik.',
-    priceKey: 'prezuti',
+    name: 'Výměna kompletních kol',
+    text: 'Máte letní a zimní sadu na discích? Kola vám vyměním, vyvážení celé sady je za příplatek.',
+    priceKey: 'prezuti-kola',
   },
   {
-    name: 'Vyvážení kol',
-    text: 'Vyvážení na vyvažovačce. Konec vibracím ve volantu při vyšších rychlostech.',
-    priceKey: 'vyvazeni',
+    name: 'Kompletní přezutí pneumatik',
+    text: 'Pneumatiky sundám z disků, nasadím jiné a všechna 4 kola vyvážím včetně běžného závaží. Při tom zkontroluji dezén a stáří pneumatik.',
+    priceKey: 'prezuti-pneu',
   },
   {
     name: 'Oprava defektu',
-    text: 'Píchlou pneumatiku opravím, pokud to jde bezpečně. Když ne, řeknu vám to rovnou.',
+    text: 'Knotem, nebo zevnitř pneumatiky. Opravuji jen to, co jde bezpečně opravit – když ne, řeknu vám to rovnou.',
     priceKey: 'defekt',
   },
   {
-    name: 'Kontrola při přezutí',
-    text: 'Když už je auto na zvedáku, mrknu na brzdy a podvozek. Dozvíte se, jestli něco nečeká – bez povinnosti cokoliv objednat.',
+    name: 'Vyvážení kol',
+    text: 'Samostatné vyvážení celé sady bez montáže. Konec vibracím ve volantu při vyšších rychlostech.',
+    priceKey: 'vyvazeni',
   },
 ];

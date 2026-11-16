@@ -8,10 +8,11 @@ Stav k 16. 11. 2026. Vše je v kódu označené `// TODO(podklady)`.
       (web, Google, Instagram) — nejednotný telefon škodí lokálnímu SEO. → `src/lib/contact.ts`
 - [ ] **WhatsApp** na hlavním čísle — ano/ne? → `business.whatsapp`
 - [ ] **IČO** a **e-mail** pro objednávky (+ e-mail pro notifikace z Netlify Forms). → `contact.ts`
-- [ ] **Plátce DPH?** (kvůli „ceny konečné") → `business.vatPayer`
-- [ ] **Ceník** — alespoň „od" ceny: diagnostika, výměna oleje, DSG olej, destičky, kotouče+destičky, tlumiče,
-      řemen+kladky, příprava na STK, přezutí, přezutí pneu na disky, vyvážení, defekt, prověrka (výjezd / dílna),
-      hodinová sazba, příplatky (SUV, dodávka). → `src/lib/pricing.ts`
+- [x] **Plátce DPH:** ne („Nejsme plátci DPH" – Dennisův ceník na Google profilu).
+- [x] **Ceník pneuservisu** – přepsán z Dennisova ceníku na Google profilu (`tyrePriceTables` v `src/lib/pricing.ts`).
+      Nechat Dennise zkontrolovat drobné poznámky pod tabulkami (příplatky RunFlat / nízký profil, R23+).
+- [ ] **Ceník servisu a prověrky** – alespoň „od" ceny: diagnostika, výměna oleje, DSG olej, destičky, kotouče+destičky,
+      tlumiče, řemen+kladky, příprava na STK, prověrka (výjezd / dílna), hodinová sazba. → `src/lib/pricing.ts`
 - [ ] **Prověrka:** potvrdit checklist (`src/lib/inspection.ts`) — hlavně tloušťkoměr laku, prověření historie
       (Cebia / jiná služba — kdo ji platí?), dosah výjezdu („Frýdek-Místek a okolí" — kolik km?), cena dojezdu.
 - [ ] **Doba uchování údajů** v zásadách (navrženo 3 roky). → `ochrana-osobnich-udaju`

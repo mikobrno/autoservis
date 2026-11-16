@@ -43,3 +43,18 @@ WhatsApp tlačítko: #25d366 s tmavým textem.
 Jen skutečné fotky z dílny (starý web + Google profil), převedené do WebP 1200 px. **SPZ rozmazané.**
 Chybí portrét Dennise (TODO v `o-mne`). Dennis by měl poslat originály fotek z Google profilu ve vyšším rozlišení
 (Jaguar má jen 1122 px na šířku).
+
+## Rozsvícení dílny (úvodní efekt)
+
+Při první návštěvě úvodní stránky je fotka dílny „zhasnutá“ a po jejím načtení světla naskočí jako zářivky
+(2× bliknou, ~2 s), s nimi se rozsvítí jantarové „za co platíte“ v H1. Logo v hlavičce se obkreslí a zazáří,
+šestiúhelníky v úvodu podstránek (desktop) naskakují postupně.
+
+- Kód: `src/components/HeroLights.tsx`, třídy `dk-lights-*`, `dk-neon`, `dk-tube`, `dk-logo-*` v `globals.css`,
+  skript v `<head>` v `layout.tsx`.
+- Start až po načtení fotky (jinak by blikání proběhlo nad prázdnou plochou), pojistka 3 s.
+- Jednou za návštěvu (sessionStorage `dk-lights`). **`/?svetla`** přehraje efekt znovu – na předvádění.
+- Při vypnutých animacích v systému (`prefers-reduced-motion`, ve Windows časté) jen plynulé rozsvícení bez blikání;
+  bez JavaScriptu se nic nespouští (`<noscript>` styl).
+- Pozor: na adresách *.netlify.app vkládá Netlify do `<head>` HTML komentář, který rozbije hydrataci Reactu
+  (chyba #418, stránka se překreslí). Na vlastní doméně se to neděje. HeroLights to ustojí (useLayoutEffect).

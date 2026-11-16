@@ -10,7 +10,7 @@
 ## Služby
 
 - [Servis a opravy](https://autoservisdk.cz/servis): diagnostika, výměna oleje a filtrů (i DSG a diferenciál), brzdy, podvozek a tlumiče, opravy motoru, příprava na STK
-- [Pneuservis](https://autoservisdk.cz/pneuservis): přezutí, vyvážení, oprava defektu
+- [Pneuservis](https://autoservisdk.cz/pneuservis): výměna kompletních kol od 400 Kč, kompletní přezutí pneumatik od 700 Kč (podle rozměru R13–R22), oprava defektu od 200 Kč, vyvážení sady 400 Kč; ceny konečné, není plátce DPH
 - [Prověření auta před koupí](https://autoservisdk.cz/provereni-auta-pred-koupi): checklist (doklady a historie, lak, motor, diagnostika, interiér, podvozek, spodek, pneumatiky, zkušební jízda), report s fotkami, verdikt a odhad oprav
 - [Ukázkový report](https://autoservisdk.cz/provereni-auta-pred-koupi/ukazkovy-report)
 
