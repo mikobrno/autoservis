@@ -5,6 +5,7 @@ import CookieConsent from '@/components/CookieConsent';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import MobileActionBar from '@/components/MobileActionBar';
+import RevealObserver from '@/components/RevealObserver';
 import { business, siteName, siteUrl } from '@/lib/contact';
 import { jsonLdScript, localBusinessJsonLd, ogImage, webSiteJsonLd } from '@/lib/seo';
 
@@ -54,16 +55,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    // suppressHydrationWarning: skript níže může před hydratací přidat na <html> třídu dk-lights-seen.
+    // suppressHydrationWarning: HeroLights mění třídy na <html> (dk-lights-go / dk-lights-seen).
     <html lang="cs" suppressHydrationWarning>
       <head>
-        {/* Efekt „rozsvícení dílny“ jen jednou za návštěvu – rozhodnout ještě před vykreslením. */}
-        <script
-          dangerouslySetInnerHTML={{
-            // ?svetla v adrese = přehrát efekt znovu (na předvádění).
-            __html: `try{var s=sessionStorage;if(/[?&]svetla/.test(location.search)){s.removeItem('dk-lights')}else if(s.getItem('dk-lights')){document.documentElement.classList.add('dk-lights-seen')}}catch(e){}`,
-          }}
-        />
         {/* Bez JavaScriptu se efekt nespustí – fotka nesmí zůstat zhasnutá. */}
         <noscript>
           <style>{`.dk-lights-dark,.dk-lights-bloom{display:none}.dk-neon{opacity:1}`}</style>
@@ -80,6 +74,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Footer />
         <MobileActionBar />
         <CookieConsent />
+        <RevealObserver />
       </body>
     </html>
   );

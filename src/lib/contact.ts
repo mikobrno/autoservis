@@ -16,8 +16,8 @@ export const business = {
   googleName: 'DK Autoservis a Pneuservis',
   owner: 'Dennis Koribanič',
   ownerFirstName: 'Dennis',
-  // TODO(podklady): Google profil uvádí +420 774 883 911, starý web +420 737 020 324 – ověřit, které platí.
-  phone: '+420 737 020 324',
+  // Potvrdil Dennis 16. 11. 2026 (stejné číslo je na Google profilu). Platí i pro WhatsApp.
+  phone: '+420 774 883 911',
   email: '', // TODO(podklady): e-mail pro poptávky
   ico: '', // TODO(podklady): IČO
   street: 'Palkovická 2204',
@@ -28,7 +28,7 @@ export const business = {
   geo: { lat: 49.6614526, lng: 18.3328221 },
   instagram: 'dk_autoservis_',
   /** Pokud Dennis WhatsApp na tomhle čísle nepoužívá, nastavit na false – odkazy zmizí. */
-  whatsapp: true, // TODO(podklady): potvrdit WhatsApp na hlavním čísle
+  whatsapp: true, // Potvrzeno 16. 11. 2026: WhatsApp je na hlavním čísle.
   /** Z Dennisova ceníku na Google profilu: „Nejsme plátci DPH." */
   vatPayer: false,
 };

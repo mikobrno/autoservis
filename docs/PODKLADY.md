@@ -4,13 +4,13 @@ Stav k 16. 11. 2026. Vše je v kódu označené `// TODO(podklady)`.
 
 ## Musí být před spuštěním
 
-- [ ] **Telefon:** web má +420 737 020 324, Google profil +420 774 883 911. Které platí? Sjednotit všude
-      (web, Google, Instagram) — nejednotný telefon škodí lokálnímu SEO. → `src/lib/contact.ts`
-- [ ] **WhatsApp** na hlavním čísle — ano/ne? → `business.whatsapp`
+- [x] **Telefon:** +420 774 883 911 (potvrdil Dennis 16. 11. 2026, i pro WhatsApp). Starý web má ještě 737 020 324 –
+      zmizí přepojením domény. Ověřit, že na Instagramu je stejné číslo.
+- [x] **WhatsApp** na hlavním čísle 774 883 911 – ano.
 - [ ] **IČO** a **e-mail** pro objednávky (+ e-mail pro notifikace z Netlify Forms). → `contact.ts`
 - [x] **Plátce DPH:** ne („Nejsme plátci DPH" – Dennisův ceník na Google profilu).
 - [x] **Ceník pneuservisu** – přepsán z Dennisova ceníku na Google profilu (`tyrePriceTables` v `src/lib/pricing.ts`).
-      Nechat Dennise zkontrolovat drobné poznámky pod tabulkami (příplatky RunFlat / nízký profil, R23+).
+      Ověřeno proti originálu ceníku v plném rozlišení (16. 11. 2026) – ceny i poznámky sedí.
 - [ ] **Ceník servisu a prověrky** – alespoň „od" ceny: diagnostika, výměna oleje, DSG olej, destičky, kotouče+destičky,
       tlumiče, řemen+kladky, příprava na STK, prověrka (výjezd / dílna), hodinová sazba. → `src/lib/pricing.ts`
 - [ ] **Prověrka:** potvrdit checklist (`src/lib/inspection.ts`) — hlavně tloušťkoměr laku, prověření historie

@@ -99,9 +99,9 @@ html {
 /* -------------------------------------------------------
    „Rozsvícení dílny" – při prvním otevření úvodní stránky je
    fotka dílny potemnělá a LED světla naskočí jako zářivky.
-   Animuje se jen opacity (GPU, nezdržuje LCP), jednou za
-   návštěvu (třída .dk-lights-seen, viz HeroLights.tsx a skript
-   v layout.tsx) a nic z toho se neděje při prefers-reduced-motion.
+   Animuje se jen opacity (GPU, nezdržuje LCP), při každém
+   zobrazení úvodu (viz HeroLights.tsx). Při prefers-reduced-motion
+   jen plynulé prolnutí (blok na konci souboru).
    ------------------------------------------------------- */
 @keyframes dk-lights-dark {
   0% { opacity: 0.93; animation-timing-function: step-end; }
@@ -145,18 +145,284 @@ html {
 }
 .dk-tube { animation: dk-tube 0.7s step-end both; }
 
-/* Logo: šestiúhelník se obkreslí a krátce zazáří jantarovou. Obvod ≈ 137. */
-@keyframes dk-logo-draw { from { stroke-dashoffset: 137; } to { stroke-dashoffset: 0; } }
+/* -------------------------------------------------------
+   Logo: šestiúhelník = matice. Při načtení se „utáhne“
+   (pootočí s mírným dotažením), přes logo přejede odlesk
+   a šestiúhelník zazáří. Jen v hlavičce (Logo animate),
+   jen při plném načtení stránky.
+   ------------------------------------------------------- */
+@keyframes dk-logo-tighten {
+  0% { transform: rotate(-60deg); }
+  72% { transform: rotate(5deg); }
+  100% { transform: rotate(0deg); }
+}
 @keyframes dk-logo-glow {
   0%, 100% { filter: none; }
   45% { filter: drop-shadow(0 0 7px rgba(255, 178, 30, 0.85)); }
 }
-.dk-logo-hex { stroke-dasharray: 137; animation: dk-logo-draw 0.8s ease-out 0.1s both; }
-.dk-logo-mark { animation: dk-logo-glow 1.1s ease-out 0.7s both; }
+@keyframes dk-logo-shine {
+  from { transform: translateX(-130%) skewX(-20deg); }
+  to { transform: translateX(330%) skewX(-20deg); }
+}
+.dk-logo-mark {
+  animation:
+    dk-logo-tighten 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s both,
+    dk-logo-glow 1.1s ease-out 0.75s both;
+}
+.dk-shine {
+  position: absolute;
+  inset: -4px;
+  overflow: hidden;
+  border-radius: 10px;
+  pointer-events: none;
+}
+.dk-shine::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 32%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  transform: translateX(-130%) skewX(-20deg);
+  animation: dk-logo-shine 0.9s ease-in-out 0.75s both;
+}
 
-/* Vypnuté animace v systému (ve Windows častá volba): bez blikání a kreslení,
-   dílna se jen plynule rozsvítí – prolnutí není pohyb. !important a vyšší
-   specificita přebijí globální pravidlo animation-duration: 0.01ms výše. */
+/* -------------------------------------------------------
+   Palubní deska (Dashboard.tsx) – jako po otočení klíčku:
+   kontrolky naskočí, postupně „cvaknou“ a zhasnou a zůstane
+   „Vše v pořádku“. Výchozí styl = konečný stav (zhasnuto, OK
+   vidět); stav před startem jen když běží JS (scripting).
+   ------------------------------------------------------- */
+.dk-dash-icon { color: rgba(163, 172, 182, 0.35); }
+@keyframes dk-dash-on {
+  0% { color: rgba(163, 172, 182, 0.35); filter: none; animation-timing-function: step-end; }
+  6%, 100% { color: var(--c); filter: drop-shadow(0 0 5px var(--c)); }
+}
+@keyframes dk-fade-up {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+/* Bez fill-mode: po doběhnutí kontrolka „cvakne“ zpět do zhasnutého výchozího stavu. */
+.dk-lights-go .dk-dash-icon { animation: dk-dash-on calc(0.75s + var(--i) * 0.16s) 0.1s; }
+.dk-lights-go .dk-dash-ok { animation: dk-fade-up 0.45s ease-out 1.75s both; }
+
+/* -------------------------------------------------------
+   Auto pod nadpisem (RoadUnderline.tsx): projede zleva
+   doprava, za koly se práší a za sebou „vytáhne“ jantarové
+   podtržení. Dráha auta i podtržení jsou lineární, aby
+   prach a stopa seděly na zadní kolo. Výchozí = jen podtržení.
+   ------------------------------------------------------- */
+.dk-car-track { opacity: 0; }
+.dk-dust { opacity: 0; }
+@keyframes dk-car-drive {
+  0% { transform: translateX(-20%); opacity: 0; }
+  4%, 92% { opacity: 1; }
+  100% { transform: translateX(110%); opacity: 0; }
+}
+/* Zadní kolo je na začátku auta: stopa začne, až dojede na začátek textu (15 %),
+   a doroste na konec textu (92 %). */
+@keyframes dk-road-grow {
+  0%, 15.4% { transform: scaleX(0); }
+  92.3%, 100% { transform: scaleX(1); }
+}
+/* 0 % průhledné – během čekání na průjezd auta (fill-mode both) nesmí být obláček vidět. */
+@keyframes dk-dust-puff {
+  0% { opacity: 0; transform: translate(-50%, 0) scale(0.3); }
+  12% { opacity: 0.85; transform: translate(-55%, -1px) scale(0.5); }
+  100% { opacity: 0; transform: translate(-95%, -9px) scale(1.9); }
+}
+@keyframes dk-wheel-spin { to { transform: rotate(360deg); } }
+.dk-wheel { transform-box: fill-box; transform-origin: center; }
+.dk-lights-go .dk-car-track { animation: dk-car-drive 1.4s linear 1.75s both; }
+.dk-lights-go .dk-road-line { animation: dk-road-grow 1.4s linear 1.75s both; }
+.dk-lights-go .dk-dust { animation: dk-dust-puff 0.9s ease-out var(--t) both; }
+.dk-lights-go .dk-wheel { animation: dk-wheel-spin 0.32s linear infinite; }
+
+/* Úvodní nadpis se při rozsvícení „usadí“ (jen transform + opacity, žádné CLS). */
+@keyframes dk-h1-settle {
+  from { transform: translateX(-16px); opacity: 0.55; }
+  to { transform: none; opacity: 1; }
+}
+.dk-lights-go .dk-h1 { animation: dk-h1-settle 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+
+/* Stav před startem (fotka se ještě načítá) – jen když běží JavaScript. */
+@media (scripting: enabled) {
+  html:not(.dk-lights-seen):not(.dk-lights-go) .dk-dash-ok { opacity: 0; }
+  html:not(.dk-lights-seen):not(.dk-lights-go) .dk-road-line { transform: scaleX(0); }
+  html:not(.dk-lights-seen):not(.dk-lights-go) .dk-h1 { transform: translateX(-16px); opacity: 0.55; }
+}
+
+/* -------------------------------------------------------
+   Nalétávající nadpisy – stejný princip jako milankost.cz:
+   nadpis přijede zleva, když dojede na obrazovku
+   (RevealObserver.tsx nastaví data-revealed). Skryté jen když
+   běží JS, takže bez něj je všechno normálně vidět.
+   ------------------------------------------------------- */
+[data-reveal="heading"],
+[data-reveal="lead"] {
+  transition: transform 1.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.9s ease;
+}
+[data-reveal="lead"] { transition-delay: 0.15s; }
+@media (scripting: enabled) {
+  [data-reveal="heading"]:not([data-revealed]),
+  [data-reveal="lead"]:not([data-revealed]) { opacity: 0; transform: translateX(-72px); }
+}
+@media (scripting: enabled) and (max-width: 767px) {
+  [data-reveal="heading"]:not([data-revealed]),
+  [data-reveal="lead"]:not([data-revealed]) { transform: translateX(-40px); }
+}
+
+/* Report prověrky se „vyplní“: řádky naskakují, nakonec dopadne razítko verdiktu. */
+.dk-rep-row { transition: opacity 0.45s ease, transform 0.45s ease; transition-delay: calc(0.25s + var(--i) * 0.12s); }
+.dk-rep-count { transition: opacity 0.5s ease 0.1s; }
+.dk-rep-stamp {
+  transition: opacity 0.2s ease, transform 0.4s cubic-bezier(0.3, 1.6, 0.5, 1);
+  transition-delay: calc(0.4s + var(--n) * 0.12s);
+}
+@media (scripting: enabled) {
+  [data-reveal="report"]:not([data-revealed]) .dk-rep-row { opacity: 0; transform: translateX(-10px); }
+  [data-reveal="report"]:not([data-revealed]) .dk-rep-count { opacity: 0; }
+  [data-reveal="report"]:not([data-revealed]) .dk-rep-stamp { opacity: 0; transform: scale(1.7) rotate(-8deg); }
+}
+
+/* -------------------------------------------------------
+   Hvězdičky Google hodnocení („koukni, mám 5 hvězd“):
+   rozsvítí se postupně s poskočením, u páté se zajiskří.
+   Odznak v úvodu (.dk-stars-hero) navazuje na rozsvícení
+   a občas přes něj přejede odlesk; karta (data-reveal=
+   "rating") se spustí při doscrollování a „5,0“ vyskočí.
+   ------------------------------------------------------- */
+@keyframes dk-star-pop {
+  0% { color: rgba(163, 172, 182, 0.45); transform: scale(1); }
+  45% { color: var(--color-amber); transform: scale(1.4); }
+  100% { color: var(--color-amber); transform: scale(1); }
+}
+@keyframes dk-sparkle {
+  0% { opacity: 0; transform: scale(0.2) rotate(0deg); }
+  35% { opacity: 1; transform: scale(1.15) rotate(45deg); }
+  100% { opacity: 0; transform: scale(0.3) rotate(110deg); }
+}
+@keyframes dk-num-pop {
+  0% { opacity: 0; transform: scale(0.6); }
+  60% { opacity: 1; transform: scale(1.12); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes dk-star-glint {
+  0%, 88% { transform: translateX(-120%) skewX(-20deg); }
+  100% { transform: translateX(300%) skewX(-20deg); }
+}
+.dk-sparkle { position: absolute; opacity: 0; pointer-events: none; color: #ffe7a3; }
+/* Karta hodnocení je světlá – světle žlutá třpytka by na ní zanikla. */
+[data-reveal="rating"] .dk-sparkle { color: var(--color-amber-dark); }
+.dk-rating-num { display: inline-block; }
+.dk-glint { position: absolute; inset: -2px; overflow: hidden; border-radius: 4px; pointer-events: none; }
+.dk-glint::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 30%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: translateX(-120%) skewX(-20deg);
+  animation: dk-star-glint 7s ease-in-out 5s infinite;
+}
+.dk-lights-go .dk-stars-hero .dk-star { animation: dk-star-pop 0.45s ease-out calc(2.1s + var(--i) * 0.12s) both; }
+.dk-lights-go .dk-stars-hero .dk-sparkle { animation: dk-sparkle 0.8s ease-out calc(2.75s + var(--s) * 0.15s) both; }
+[data-reveal="rating"][data-revealed] .dk-star { animation: dk-star-pop 0.45s ease-out calc(0.35s + var(--i) * 0.12s) both; }
+[data-reveal="rating"][data-revealed] .dk-sparkle { animation: dk-sparkle 0.8s ease-out calc(1s + var(--s) * 0.15s) both; }
+[data-reveal="rating"][data-revealed] .dk-rating-num { animation: dk-num-pop 0.6s cubic-bezier(0.3, 1.4, 0.5, 1) 0.15s both; }
+@media (scripting: enabled) {
+  html:not(.dk-lights-seen):not(.dk-lights-go) .dk-stars-hero .dk-star { color: rgba(163, 172, 182, 0.45); }
+  [data-reveal="rating"]:not([data-revealed]) .dk-star { color: rgba(163, 172, 182, 0.45); }
+  [data-reveal="rating"]:not([data-revealed]) .dk-rating-num { opacity: 0; }
+}
+
+/* -------------------------------------------------------
+   Ikony služeb (ServiceIcon.tsx) – každá krátce „ožije“ podle
+   významu, jednou při doscrollování ([data-revealed]) a znovu
+   při najetí myší na kartu (RevealObserver restartuje animace).
+   Všechny animace mají fill „both“ (jinak by restart nešel).
+   ------------------------------------------------------- */
+.dk-ico { display: inline-flex; }
+.dk-ico svg { overflow: visible; }
+
+/* Diagnostika: ručička budíku švihne na doraz a vrátí se. */
+@keyframes dk-ico-needle {
+  0% { transform: rotate(-100deg); }
+  60% { transform: rotate(25deg); }
+  80% { transform: rotate(-6deg); }
+  100% { transform: rotate(0deg); }
+}
+[data-revealed].dk-ico-diagnostika svg path:first-child {
+  transform-box: view-box;
+  transform-origin: 12px 14px;
+  animation: dk-ico-needle 1s cubic-bezier(0.3, 0.8, 0.3, 1) both;
+}
+
+/* Výměna oleje: kapka ukápne a objeví se znovu. */
+@keyframes dk-ico-drip {
+  0% { transform: translateY(-4px) scale(0.6); opacity: 0; }
+  25% { transform: none; opacity: 1; }
+  55% { transform: scale(0.94, 1.12); }
+  80% { transform: translateY(6px) scale(0.7); opacity: 0; }
+  81% { transform: translateY(-4px) scale(0.6); opacity: 0; }
+  100% { transform: none; opacity: 1; }
+}
+[data-revealed].dk-ico-olej svg { transform-origin: 50% 10%; animation: dk-ico-drip 1.4s ease-in-out both; }
+
+/* Brzdy: kotouč se roztočí a zabrzdí do zastavení. */
+@keyframes dk-ico-brake { from { transform: rotate(-540deg); } to { transform: rotate(0deg); } }
+[data-revealed].dk-ico-brzdy svg { animation: dk-ico-brake 1.2s cubic-bezier(0.1, 0.7, 0.25, 1) both; }
+
+/* Podvozek: klíč se pootočí, jako by utahoval. */
+@keyframes dk-ico-wrench {
+  0% { transform: rotate(0deg); }
+  35% { transform: rotate(-35deg); }
+  70% { transform: rotate(12deg); }
+  100% { transform: rotate(0deg); }
+}
+[data-revealed].dk-ico-podvozek svg { animation: dk-ico-wrench 0.9s ease-in-out both; }
+
+/* Motor: ozubené kolo se otočí. */
+@keyframes dk-ico-cog { from { transform: rotate(0deg); } to { transform: rotate(180deg); } }
+[data-revealed].dk-ico-motor svg { animation: dk-ico-cog 1.2s cubic-bezier(0.45, 0.05, 0.3, 1) both; }
+
+/* STK a prověrka: fajfka se dokreslí. */
+@keyframes dk-ico-check { from { stroke-dashoffset: 12; } to { stroke-dashoffset: 0; } }
+[data-revealed].dk-ico-stk svg path:last-child { stroke-dasharray: 12; animation: dk-ico-check 0.6s ease-out 0.2s both; }
+
+/* Pneuservis: kolo přijede a dotočí se. */
+@keyframes dk-ico-roll {
+  0% { transform: translateX(-10px) rotate(-240deg); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: none; opacity: 1; }
+}
+[data-revealed].dk-ico-pneu svg { animation: dk-ico-roll 1s cubic-bezier(0.2, 0.8, 0.3, 1) both; }
+
+/* Prověrka: lupa „prohledá“ okolí a odškrtne. */
+@keyframes dk-ico-scan {
+  0% { transform: translate(-2px, -2px); }
+  30% { transform: translate(2px, -1px); }
+  60% { transform: translate(1px, 2px); }
+  100% { transform: none; }
+}
+[data-revealed].dk-ico-proverka svg { animation: dk-ico-scan 1s ease-in-out both; }
+[data-revealed].dk-ico-proverka svg path:first-child { stroke-dasharray: 12; animation: dk-ico-check 0.5s ease-out 0.9s both; }
+
+/* Fajfky jsou před doscrollováním „nedokreslené“ – jen když běží JS. */
+@media (scripting: enabled) {
+  .dk-ico-stk:not([data-revealed]) svg path:last-child,
+  .dk-ico-proverka:not([data-revealed]) svg path:first-child { stroke-dasharray: 12; stroke-dashoffset: 12; }
+}
+
+/* -------------------------------------------------------
+   Vypnuté animace v systému (ve Windows častá volba):
+   nic se nehýbe ani nebliká, všechno se jen plynule prolne.
+   !important + vyšší specificita přebijí globální pravidlo
+   animation/transition-duration: 0.01ms výše.
+   ------------------------------------------------------- */
 @keyframes dk-lights-fade {
   0%, 15% { opacity: 0.93; }
   100% { opacity: 0; }
@@ -165,13 +431,66 @@ html {
   0%, 15% { opacity: 0.35; }
   100% { opacity: 1; }
 }
+@keyframes dk-dash-fade {
+  0% { color: rgba(163, 172, 182, 0.35); }
+  25%, 70% { color: var(--c); }
+  100% { color: rgba(163, 172, 182, 0.35); }
+}
+@keyframes dk-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dk-h1-fade { from { opacity: 0.55; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {
   .dk-lights-go .dk-lights-dark { animation: dk-lights-fade 1.4s ease-out both !important; }
   .dk-lights-go .dk-neon { animation: dk-neon-fade 1.4s ease-out both !important; }
   .dk-lights-bloom { display: none; }
-  .dk-tube,
-  .dk-logo-hex,
-  .dk-logo-mark { animation: none !important; }
+  .dk-tube { animation: none !important; }
+  .dk-logo-mark { animation: dk-logo-glow 1.2s ease-out 0.3s both !important; }
+  .dk-shine { display: none; }
+  .dk-lights-go .dk-dash-icon { animation: dk-dash-fade 1.6s ease-in-out 0.1s both !important; }
+  .dk-lights-go .dk-dash-ok { animation: dk-fade-in 0.6s ease-out 1.5s both !important; }
+  .dk-car-track,
+  .dk-dust { display: none; }
+  html .dk-road-line { transform: none !important; }
+  .dk-lights-go .dk-road-line { animation: dk-fade-in 0.8s ease-out 1.5s both !important; }
+  .dk-lights-go .dk-h1 { animation: dk-h1-fade 0.8s ease-out both !important; }
+  html .dk-h1 { transform: none !important; }
+  html [data-reveal="heading"],
+  html [data-reveal="lead"] { transform: none !important; transition: opacity 0.8s ease !important; }
+  html [data-reveal="lead"] { transition-delay: 0.15s !important; }
+  html .dk-rep-row,
+  html .dk-rep-stamp { transform: none !important; }
+  html .dk-rep-row { transition: opacity 0.5s ease !important; transition-delay: calc(0.25s + var(--i) * 0.12s) !important; }
+  html .dk-rep-count { transition: opacity 0.5s ease 0.1s !important; }
+  html .dk-rep-stamp { transition: opacity 0.4s ease !important; transition-delay: calc(0.4s + var(--n) * 0.12s) !important; }
+}
+/* Klidná verze hvězdiček: jen se postupně zbarví, „5,0“ se prolne, bez třpytek a odlesku. */
+@keyframes dk-star-fade {
+  from { color: rgba(163, 172, 182, 0.45); }
+  to { color: var(--color-amber); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html .dk-lights-go .dk-stars-hero .dk-star,
+  html [data-reveal="rating"][data-revealed] .dk-star {
+    animation-name: dk-star-fade !important;
+    animation-duration: 0.5s !important;
+  }
+  html [data-reveal="rating"][data-revealed] .dk-rating-num {
+    animation-name: dk-fade-in !important;
+    animation-duration: 0.6s !important;
+  }
+  .dk-sparkle,
+  .dk-glint { display: none; }
+}
+/* Klidná verze ikon: nic se netočí ani nekape, ikona jen krátce zjantaruje a fajfka se prolne. */
+@keyframes dk-ico-tint { 40% { color: var(--color-amber-dark); } }
+@media (prefers-reduced-motion: reduce) {
+  html [data-revealed].dk-ico svg,
+  html [data-revealed].dk-ico svg * { animation: none !important; transform: none !important; }
+  html [data-revealed].dk-ico { animation: dk-ico-tint 1.2s ease both !important; }
+  html .dk-ico svg path { stroke-dashoffset: 0 !important; }
+}
+/* Klidná verze, stav před startem: podtržení schované průhledností (ne zúžením). */
+@media (scripting: enabled) and (prefers-reduced-motion: reduce) {
+  html:not(.dk-lights-seen):not(.dk-lights-go) .dk-road-line { opacity: 0; }
 }
 
 /* Na mobilu je dole pevná lišta Zavolat · WhatsApp · Objednat – obsah pod ní nesmí zmizet. */

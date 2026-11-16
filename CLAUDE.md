@@ -27,7 +27,7 @@ Závazný brief: `docs/BRIEF.md`. Design: `docs/DESIGN.md`. Chybějící podklad
 
 ## Kontrola před dokončením úkolu
 ```
-grep -rniE "tým|týmu|naše firma|naši mechanici|zaměstnanc" src public/llms.txt
+grep -rniE "\b(tým|týmu|týmem)\b|naše firma|naši mechanici|zaměstnanc" src public/llms.txt
 grep -rn "DK Autoservis" src --include=*.tsx --include=*.ts | grep -v "src/lib/contact.ts"
 ```
 první musí vrátit 0 řádků (kromě komentářů), druhý jen komentáře.

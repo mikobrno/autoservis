@@ -1,8 +1,8 @@
 /**
  * Ceník. Ceny jsou KONEČNÉ – Dennis není plátce DPH.
  *
- * Pneuservis: přepsáno z Dennisova ceníku zveřejněného na Google profilu
- * („Frýdek-Místek | Pneuservis – ceník", listopad 2026). Při změně ceníku
+ * Pneuservis: přepsáno z Dennisova ceníku „Frýdek-Místek | Pneuservis – ceník"
+ * (Google profil, listopad 2026; ověřeno proti originálu v plném rozlišení). Při změně ceníku
  * upravit `tyrePriceTables` – souhrnné ceny „od" se z nich počítají samy.
  *
  * Servis a prověrka: dokud cena není potvrzená (`price: null`), web ukazuje
@@ -51,8 +51,7 @@ export const tyrePriceTables: TyrePriceTable[] = [
     ],
     notes: [
       'V ceně: demontáž pneumatik z disků, montáž nových pneumatik a vyvážení všech 4 kol včetně běžného závaží.',
-      'Příplatky: profil 30 a méně +200 Kč/sada, RunFlat (RFT) +200 Kč/sada, kombinace obou +400 Kč.',
-      'R23 a větší – individuální cena.',
+      'Příplatky: profil 30 a méně +200 Kč/sada; RunFlat (RFT) +200 Kč/sada. Kombinace obou +400 Kč. R23 a větší – individuální cena.',
     ],
   },
   {
@@ -74,7 +73,7 @@ export const tyrePriceTables: TyrePriceTable[] = [
       { label: 'Oprava knotem', price: 200 },
       { label: 'Oprava zevnitř pneumatiky', price: 350 },
     ],
-    notes: ['Opravuji jen pneumatiky, které jdou bezpečně opravit.'],
+    notes: ['Opravy provádím pouze u pneumatik, které jsou bezpečně opravitelné.'],
   },
   {
     id: 'vyvazeni',
@@ -84,7 +83,7 @@ export const tyrePriceTables: TyrePriceTable[] = [
   },
   {
     id: 'dalsi',
-    title: 'Další služby',
+    title: 'Další služba',
     columns: ['Služba', 'Cena'],
     rows: [{ label: 'Výměna gumového ventilku', price: 50, unit: 'ks' }],
   },
@@ -140,7 +139,7 @@ export const priceGroups: PriceGroup[] = [
 ];
 
 /** Patička ceníku – z Dennisova ceníku („Uvedené ceny jsou konečné. Nejsme plátci DPH."), v 1. osobě. */
-export const priceFootnote = 'Uvedené ceny jsou konečné, nejsem plátce DPH.';
+export const priceFootnote = 'Uvedené ceny jsou konečné. Nejsem plátce DPH.';
 
 const allItems = priceGroups.flatMap((group) => group.items);
 

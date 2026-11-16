@@ -5,11 +5,13 @@ import ContactCard from '@/components/ContactCard';
 import CtaBand from '@/components/CtaBand';
 import FaqList from '@/components/FaqList';
 import GoogleRating from '@/components/GoogleRating';
+import Dashboard from '@/components/Dashboard';
 import HeroLights from '@/components/HeroLights';
 import JobCard from '@/components/JobCard';
 import MapEmbed from '@/components/MapEmbed';
 import ProcessSteps from '@/components/ProcessSteps';
 import ReportPreview from '@/components/ReportPreview';
+import RoadUnderline from '@/components/RoadUnderline';
 import ServiceIcon from '@/components/ServiceIcon';
 import ButtonLink from '@/components/ui/Button';
 import Section from '@/components/ui/Section';
@@ -68,18 +70,23 @@ export default function HomePage() {
             />
             <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink to-transparent lg:hidden" aria-hidden="true" />
             <HeroLights />
+            {/* Až za HeroLights, ať kontrolky svítí i nad zhasnutou dílnou. */}
+            <Dashboard />
           </div>
 
           <div className="relative -mt-8 px-4 pb-10 sm:px-6 lg:order-1 lg:mt-0 lg:p-0">
             <p className="text-sm font-semibold uppercase tracking-[0.12em] text-amber">
               {business.city} · {business.street}
             </p>
-            <h1 className="mt-3 font-display text-[2.75rem] font-bold uppercase leading-[0.95] sm:text-6xl lg:text-7xl">
-              Autoservis, kde víte, <span className="dk-neon text-amber">za co platíte</span>
+            <h1 className="dk-h1 mt-3 font-display text-[2.75rem] font-bold uppercase leading-[0.95] sm:text-6xl lg:text-7xl">
+              Autoservis, kde víte,{' '}
+              <RoadUnderline>
+                <span className="dk-neon text-amber">za co platíte</span>
+              </RoadUnderline>
             </h1>
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">
-              Jmenuji se {business.ownerFirstName} a na Palkovické opravuji auta. Než cokoliv vyměním, ukážu vám, co je
-              špatně, a řeknu, kolik to bude stát.
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg lg:mt-9">
+              Servis, opravy a pneuservis osobních aut. Než cokoliv vyměním, ukážu vám, co je špatně, a řeknu, kolik to
+              bude stát.
             </p>
             <div className="mt-7 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
               <ButtonLink href="/objednat"size="lg">
@@ -94,7 +101,7 @@ export default function HomePage() {
               )}
             </div>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
-              <GoogleRating onDark />
+              <GoogleRating onDark animate />
               <p className="flex items-start gap-2 text-sm text-white/75">
                 <Clock className="mt-0.5 h-4 w-4 shrink-0 text-amber" aria-hidden="true" />
                 <span>

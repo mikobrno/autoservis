@@ -53,8 +53,39 @@ Při první návštěvě úvodní stránky je fotka dílny „zhasnutá“ a po 
 - Kód: `src/components/HeroLights.tsx`, třídy `dk-lights-*`, `dk-neon`, `dk-tube`, `dk-logo-*` v `globals.css`,
   skript v `<head>` v `layout.tsx`.
 - Start až po načtení fotky (jinak by blikání proběhlo nad prázdnou plochou), pojistka 3 s.
-- Jednou za návštěvu (sessionStorage `dk-lights`). **`/?svetla`** přehraje efekt znovu – na předvádění.
+- Přehraje se při každém zobrazení úvodu (načtení, obnovení, návrat přes menu) – Milan si to tak přál.
 - Při vypnutých animacích v systému (`prefers-reduced-motion`, ve Windows časté) jen plynulé rozsvícení bez blikání;
   bez JavaScriptu se nic nespouští (`<noscript>` styl).
 - Pozor: na adresách *.netlify.app vkládá Netlify do `<head>` HTML komentář, který rozbije hydrataci Reactu
   (chyba #418, stránka se překreslí). Na vlastní doméně se to neděje. HeroLights to ustojí (useLayoutEffect).
+
+## Další animace úvodu (navázané na stejný start `dk-lights-go`)
+
+Časová osa od rozsvícení (≈ 3 s, při každém zobrazení úvodu):
+
+| čas | co | kde |
+|---|---|---|
+| od načtení | logo se „utáhne“ jako matice, přejede odlesk, šestiúhelník zazáří | `Logo.tsx` (`animate`), `.dk-logo-mark`, `.dk-shine` |
+| 0–0.8 s | nadpis H1 se „usadí“ (jen transform + opacity) | `.dk-h1` v `page.tsx` |
+| 0.1–1.65 s | palubní deska: kontrolky naskočí a postupně zhasnou | `Dashboard.tsx`, `.dk-dash-*` |
+| 1.75 s | „✓ Vše v pořádku“ | `.dk-dash-ok` |
+| 1.75–3.15 s | auto projede pod „za co platíte“, práší se, zůstane podtržení | `RoadUnderline.tsx`, `.dk-car-track`, `.dk-dust`, `.dk-road-line` |
+
+Při scrollování (všechny stránky): nadpisy sekcí a jejich úvodní odstavce nalétávají zleva jako na milankost.cz
+(`SectionHeader` → `data-reveal`, `RevealObserver.tsx`), report prověrky se „vyplní“ a dopadne razítko
+(`ReportPreview` → `data-reveal="report"`). Záměrně jen nadpisy a report – karty, odstavce a fotky se nehýbou.
+
+Pravidla:
+- `dk-lights-go` zůstává na `<html>` do odchodu z úvodu (jinak by se zastavilo auto); při odchodu se uklidí,
+  takže po návratu se vše spustí znovu.
+- Stav „před startem“ a skryté nadpisy jsou v `@media (scripting: enabled)` → bez JavaScriptu je všechno vidět.
+- Vypnuté animace v systému: nic se nehýbe ani nebliká, vše se jen prolne (auto a prach se nezobrazí).
+
+## Ikony služeb (`ServiceIcon.tsx`, `.dk-ico-*` v `globals.css`)
+
+Každá ikona krátce „ožije“ podle významu: diagnostika – ručička budíku švihne; olej – kapka ukápne; brzdy – kotouč
+se roztočí a zabrzdí; podvozek – klíč se pootočí; motor – ozubené kolo se otočí; STK – fajfka se dokreslí;
+pneu – kolo (vlastní SVG s paprsky, aby bylo vidět kutálení) přijede; prověrka – lupa prohledá a odškrtne.
+Spustí se jednou při doscrollování (`data-reveal="icon"`) a znovu po najetí myší na kartu – `RevealObserver`
+restartuje animace v nejbližším odkazu nebo prvku s `data-ico-card`. Animace musí mít fill `both` (jinak restart
+nefunguje). Vypnuté animace: ikona jen krátce zjantaruje.

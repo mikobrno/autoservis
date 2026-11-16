@@ -1,8 +1,9 @@
 import Image from 'next/image';
-import { CalendarCheck, CircleDot } from 'lucide-react';
+import { CalendarCheck } from 'lucide-react';
 import CtaBand from '@/components/CtaBand';
 import FaqList from '@/components/FaqList';
 import PageHero from '@/components/PageHero';
+import ServiceIcon from '@/components/ServiceIcon';
 import TyrePriceTables from '@/components/TyrePriceTables';
 import ButtonLink from '@/components/ui/Button';
 import Section from '@/components/ui/Section';
@@ -42,9 +43,11 @@ export default function PneuservisPage() {
         <SectionHeader id="co-delam" title="Co dělám" />
         <div className="mt-8 grid gap-4 sm:grid-cols-2 sm:gap-5">
           {tyreServices.map((item) => (
-            <div key={item.name} className="rounded-[var(--radius-card-lg)] bg-card p-6 ring-1 ring-ink/5 md:p-7">
+            <div key={item.name} data-ico-card className="rounded-[var(--radius-card-lg)] bg-card p-6 ring-1 ring-ink/5 md:p-7">
               <div className="flex items-start justify-between gap-4">
-                <CircleDot className="h-7 w-7 text-ink" aria-hidden="true" />
+                <span className="text-ink">
+                  <ServiceIcon name="pneu" className="h-7 w-7" />
+                </span>
                 {item.priceKey && <span className="text-base font-bold text-ink">{formatPrice(getPrice(item.priceKey))}</span>}
               </div>
               <h3 className="mt-4 font-display text-2xl font-bold text-ink">{item.name}</h3>

@@ -12,6 +12,7 @@ type SectionHeaderProps = {
   as?: 'h1' | 'h2';
 };
 
+/** Nadpis sekce. data-reveal = nadpis a úvodní odstavec „přijedou“ zleva (RevealObserver + globals.css). */
 export default function SectionHeader({
   kicker,
   title,
@@ -25,16 +26,21 @@ export default function SectionHeader({
   return (
     <div className={`${center ? 'mx-auto text-center' : ''} max-w-3xl`}>
       {kicker && (
-        <p className={`kicker ${center ? 'justify-center' : ''} ${onDark ? 'text-amber' : 'text-slate'}`}>{kicker}</p>
+        <p data-reveal="heading" className={`kicker ${center ? 'justify-center' : ''} ${onDark ? 'text-amber' : 'text-slate'}`}>
+          {kicker}
+        </p>
       )}
       <Heading
         id={id}
+        data-reveal="heading"
         className={`${kicker ? "mt-3" : ""} font-display text-[2rem] font-bold leading-[1.05] sm:text-4xl md:text-5xl ${onDark ? "text-white" : "text-ink"}`}
       >
         {title}
       </Heading>
       {lead && (
-        <p className={`mt-4 text-base leading-relaxed sm:text-lg ${onDark ? 'text-fog' : 'text-slate'}`}>{lead}</p>
+        <p data-reveal="lead" className={`mt-4 text-base leading-relaxed sm:text-lg ${onDark ? 'text-fog' : 'text-slate'}`}>
+          {lead}
+        </p>
       )}
     </div>
   );

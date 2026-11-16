@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { ExternalLink, Star } from 'lucide-react';
 import { google, googleReviewsUrl, googleWriteReviewUrl } from '@/lib/contact';
 
@@ -10,17 +11,47 @@ export const reviewsLabel = (count: number) => {
 
 const ratingText = google.rating.toLocaleString('cs-CZ', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
-function Stars({ className = 'h-4 w-4' }: { className?: string }) {
+/** Čtyřcípá třpytka u páté hvězdičky. */
+function Sparkle({ index, style }: { index: number; style: CSSProperties }) {
   return (
-    <span className="flex items-center gap-0.5 text-amber" aria-hidden="true">
+    <span aria-hidden="true" className="dk-sparkle" style={{ ...style, '--s': index } as CSSProperties}>
+      <svg viewBox="0 0 24 24" className="h-full w-full" focusable="false">
+        <path d="M12 0c1 7 5 11 12 12-7 1-11 5-12 12-1-7-5-11-12-12 7-1 11-5 12-12z" fill="currentColor" />
+      </svg>
+    </span>
+  );
+}
+
+/**
+ * Pět hvězdiček. Animace (globals.css, dk-star / dk-sparkle): hvězdičky se postupně
+ * rozsvítí s poskočením a u páté se zajiskří. `hero` = navázané na rozsvícení úvodu
+ * + občasný odlesk, `reveal` = při doscrollování karty, `none` = statické.
+ */
+function Stars({ className = 'h-4 w-4', mode = 'none' }: { className?: string; mode?: 'hero' | 'reveal' | 'none' }) {
+  const big = mode === 'reveal';
+  const size = big ? 14 : 10;
+  return (
+    <span
+      className={`relative flex items-center gap-0.5 text-amber ${mode === 'hero' ? 'dk-stars-hero' : ''}`}
+      aria-hidden="true"
+    >
       {Array.from({ length: 5 }, (_, index) => (
         <Star
           key={index}
-          className={className}
+          className={`${className} ${mode !== 'none' ? 'dk-star' : ''}`}
+          style={{ '--i': index } as CSSProperties}
           fill={index < Math.round(google.rating) ? 'currentColor' : 'none'}
           strokeWidth={1.5}
         />
       ))}
+      {mode !== 'none' && (
+        <>
+          <Sparkle index={0} style={{ width: size, height: size, right: -size / 2, top: -size / 1.6 }} />
+          <Sparkle index={1} style={{ width: size * 0.7, height: size * 0.7, right: size, top: -size }} />
+          <Sparkle index={2} style={{ width: size * 0.6, height: size * 0.6, right: -size, bottom: -size / 2.2 }} />
+        </>
+      )}
+      {mode === 'hero' && <span aria-hidden="true" className="dk-glint" />}
     </span>
   );
 }
@@ -29,26 +60,29 @@ type GoogleRatingProps = {
   onDark?: boolean;
   /** Velká karta s výzvou k napsání recenze. */
   variant?: 'badge' | 'card';
+  /** Odznak v úvodu: hvězdičky se rozsvítí spolu s úvodní animací (jen jedna instance na stránce). */
+  animate?: boolean;
 };
 
 /**
  * Hodnocení z Google profilu s odkazem na recenze. Čísla jsou v contact.ts
  * (`google.rating`, `google.reviewCount`) – při změně na Googlu je přepsat.
  */
-export default function GoogleRating({ onDark = false, variant = 'badge' }: GoogleRatingProps) {
+export default function GoogleRating({ onDark = false, variant = 'badge', animate = false }: GoogleRatingProps) {
   const label = `${ratingText} z 5 · ${google.reviewCount} ${reviewsLabel(google.reviewCount)} na Googlu`;
 
   if (variant === 'card') {
     return (
       <div
+        data-reveal="rating"
         className={`flex flex-col gap-5 rounded-[var(--radius-card-lg)] p-6 sm:flex-row sm:items-center sm:justify-between md:p-8 ${
           onDark ? 'border border-line bg-steel text-white' : 'bg-card text-ink shadow-sm ring-1 ring-ink/5'
         }`}
       >
         <div className="flex items-center gap-5">
-          <span className="font-display text-6xl font-bold leading-none">{ratingText}</span>
+          <span className="dk-rating-num font-display text-6xl font-bold leading-none">{ratingText}</span>
           <div>
-            <Stars className="h-5 w-5" />
+            <Stars className="h-5 w-5" mode="reveal" />
             <p className={`mt-2 text-sm ${onDark ? 'text-fog' : 'text-slate'}`}>
               {google.reviewCount} {reviewsLabel(google.reviewCount)} zákazníků na Googlu
             </p>
@@ -90,7 +124,7 @@ export default function GoogleRating({ onDark = false, variant = 'badge' }: Goog
     >
       <GoogleG />
       <span className="font-bold">{ratingText}</span>
-      <Stars />
+      <Stars mode={animate ? 'hero' : 'none'} />
       <span className={onDark ? 'text-fog' : 'text-slate'}>
         {google.reviewCount} {reviewsLabel(google.reviewCount)}
       </span>

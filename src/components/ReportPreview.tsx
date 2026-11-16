@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import StatusBadge from '@/components/StatusBadge';
@@ -19,7 +20,12 @@ export default function ReportPreview({ limit = 6 }: { limit?: number }) {
   };
 
   return (
-    <div className="overflow-hidden rounded-[var(--radius-card-lg)] bg-card text-ink shadow-2xl shadow-black/40 ring-1 ring-black/5">
+    // data-reveal="report": po doscrollování se řádky postupně „vyplní“ a dopadne razítko (globals.css).
+    <div
+      data-reveal="report"
+      style={{ '--n': findings.length } as CSSProperties}
+      className="overflow-hidden rounded-[var(--radius-card-lg)] bg-card text-ink shadow-2xl shadow-black/40 ring-1 ring-black/5"
+    >
       <div className="flex items-start justify-between gap-4 border-b border-mist px-5 py-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate">Ukázka reportu z prověrky</p>
@@ -28,12 +34,12 @@ export default function ReportPreview({ limit = 6 }: { limit?: number }) {
             {sampleReport.year} · {sampleReport.odometer}
           </p>
         </div>
-        <span className="rounded-md bg-bad px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-white">
+        <span className="dk-rep-stamp shrink-0 rounded-md bg-bad px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-white">
           {verdict.label}
         </span>
       </div>
 
-      <div className="grid grid-cols-3 border-b border-mist text-center text-sm">
+      <div className="dk-rep-count grid grid-cols-3 border-b border-mist text-center text-sm">
         <div className="px-2 py-3">
           <p className="font-display text-2xl font-bold text-ok">{counts.ok}</p>
           <p className="text-slate">v pořádku</p>
@@ -49,8 +55,12 @@ export default function ReportPreview({ limit = 6 }: { limit?: number }) {
       </div>
 
       <ul className="divide-y divide-mist">
-        {findings.map((finding) => (
-          <li key={finding.label} className="flex items-start justify-between gap-3 px-5 py-3 max-md:nth-[n+4]:hidden">
+        {findings.map((finding, index) => (
+          <li
+            key={finding.label}
+            style={{ '--i': index } as CSSProperties}
+            className="dk-rep-row flex items-start justify-between gap-3 px-5 py-3 max-md:nth-[n+4]:hidden"
+          >
             <div className="min-w-0">
               <p className="text-sm font-semibold">{finding.label}</p>
               {finding.note && <p className="mt-0.5 text-xs leading-relaxed text-slate">{finding.note}</p>}

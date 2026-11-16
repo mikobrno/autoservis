@@ -11,7 +11,6 @@ export function LogoMark({ className = 'h-10 w-10', animate = false }: { classNa
   return (
     <svg viewBox="0 0 48 42" className={`${className} ${animate ? 'dk-logo-mark' : ''}`} aria-hidden="true" focusable="false">
       <polygon
-        className={animate ? 'dk-logo-hex' : undefined}
         points="12,1.5 36,1.5 46.5,21 36,40.5 12,40.5 1.5,21"
         fill="#14171c"
         stroke="#ffb21e"
@@ -34,11 +33,15 @@ export function LogoMark({ className = 'h-10 w-10', animate = false }: { classNa
   );
 }
 
-/** `animate` = šestiúhelník se při načtení obkreslí a zazáří (jen v hlavičce). */
+/**
+ * `animate` = šestiúhelník se při načtení „utáhne“ jako matice, přes logo přejede
+ * odlesk a šestiúhelník zazáří (jen v hlavičce, CSS dk-logo-mark / dk-shine).
+ */
 export default function Logo({ onDark = true, animate = false }: { onDark?: boolean; animate?: boolean }) {
   const [first, ...rest] = business.tradeName.split(' ');
   return (
-    <Link href="/" className="group inline-flex items-center gap-3" aria-label={`${business.tradeName} – úvod`}>
+    <Link href="/" className="group relative inline-flex items-center gap-3" aria-label={`${business.tradeName} – úvod`}>
+      {animate && <span aria-hidden="true" className="dk-shine" />}
       <LogoMark animate={animate} />
       <span className="flex flex-col leading-none">
         <span className={`font-display text-xl font-bold uppercase tracking-wide ${onDark ? 'text-white' : 'text-ink'}`}>

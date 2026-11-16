@@ -2,43 +2,37 @@
 
 import { useLayoutEffect, useRef } from 'react';
 
-/** Klíč v sessionStorage – stejný čte skript v layout.tsx ještě před vykreslením. */
-export const LIGHTS_SEEN_KEY = 'dk-lights';
-
 /**
- * „Rozsvícení dílny" nad úvodní fotkou.
+ * „Rozsvícení dílny“ nad úvodní fotkou – přehraje se při každém zobrazení úvodu
+ * (načtení, obnovení stránky i návrat přes menu).
  *
- * Do startu je vrstva tmavá (dílna „zhasnutá"). Animace se pustí až ve chvíli,
+ * Do startu je vrstva tmavá (dílna „zhasnutá“). Animace se pustí až ve chvíli,
  * kdy je fotka načtená – jinak by blikání proběhlo nad prázdnou plochou a nikdo
  * by ho neviděl. Pojistka: nejpozději po 3 s se rozsvítí i bez fotky.
- * Start = třída dk-lights-go na <html> (rozjede i „neonový" nadpis).
- * Po doběhnutí třída dk-lights-seen + záznam v sessionStorage → jednou za návštěvu.
+ * Start = třída dk-lights-go na <html>. Na ni jsou navázané i „neonový“ nadpis,
+ * palubní deska (Dashboard), auto pod nadpisem (RoadUnderline), usazení nadpisu
+ * (.dk-h1) a hvězdičky v odznaku hodnocení.
+ * Po doběhnutí rozsvícení přibude dk-lights-seen (tmavá vrstva se schová).
  * Bez JavaScriptu vrstvy schová <noscript> styl v layout.tsx.
- * ?svetla v adrese = přehrát znovu (na předvádění).
  */
 export default function HeroLights() {
   const ref = useRef<HTMLDivElement>(null);
 
-  // useLayoutEffect = ještě před vykreslením. Když React při hydrataci <html>
-  // přerenderuje (třeba kvůli komentáři, který Netlify vkládá na *.netlify.app),
-  // třída dk-lights-seen ze skriptu v hlavičce zmizí – obnovíme ji tady podle
-  // sessionStorage, aby fotka ani na okamžik nezhasla.
+  // useLayoutEffect = ještě před vykreslením, ať nic neproblikne.
   useLayoutEffect(() => {
     const root = document.documentElement;
-    try {
-      const replay = /[?&]svetla/.test(window.location.search);
-      if (!replay && window.sessionStorage.getItem(LIGHTS_SEEN_KEY)) root.classList.add('dk-lights-seen');
-    } catch {
-      // Bez úložiště se rozhoduje jen podle třídy.
-    }
-    if (root.classList.contains('dk-lights-seen')) return;
+    // Vždy od začátku – i když se na úvod vracíte přes menu.
+    root.classList.remove('dk-lights-seen', 'dk-lights-go');
 
     let started = false;
+    let frame = 0;
     const start = () => {
       if (started) return;
       started = true;
       // Dva snímky, ať prohlížeč stihne fotku opravdu vykreslit.
-      requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add('dk-lights-go')));
+      frame = requestAnimationFrame(() => {
+        frame = requestAnimationFrame(() => root.classList.add('dk-lights-go'));
+      });
     };
 
     const img = ref.current?.parentElement?.querySelector('img');
@@ -49,19 +43,20 @@ export default function HeroLights() {
       img.addEventListener('error', start, { once: true });
     }
     const fallback = window.setTimeout(start, 3000);
-    return () => window.clearTimeout(fallback);
+
+    // dk-lights-go zůstává, dokud se na úvodu nedohraje vše (auto jede až do ~3.2 s);
+    // uklidí se při odchodu z úvodu, aby se po návratu vše spustilo znovu od začátku.
+    return () => {
+      window.clearTimeout(fallback);
+      cancelAnimationFrame(frame);
+      img?.removeEventListener('load', start);
+      img?.removeEventListener('error', start);
+      root.classList.remove('dk-lights-go', 'dk-lights-seen');
+    };
   }, []);
 
-  const markSeen = () => {
-    const root = document.documentElement;
-    root.classList.add('dk-lights-seen');
-    root.classList.remove('dk-lights-go');
-    try {
-      window.sessionStorage.setItem(LIGHTS_SEEN_KEY, '1');
-    } catch {
-      // Bez úložiště se efekt při dalším načtení prostě zopakuje.
-    }
-  };
+  // Rozsvícení doběhlo → schovat tmavou vrstvu. dk-lights-go zůstává, ať doběhne deska a auto.
+  const markSeen = () => document.documentElement.classList.add('dk-lights-seen');
 
   return (
     <>
