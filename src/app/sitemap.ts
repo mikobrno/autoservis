@@ -8,7 +8,7 @@ import { services } from '@/lib/services';
  * jinak by se `lastmod` měnil při každém deployi a Google by ho přestal brát
  * vážně. Při reálné úpravě textů datum posuňte.
  */
-const CONTENT_UPDATED = new Date('2026-11-16');
+const CONTENT_UPDATED = new Date('2026-11-22');
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const page = (path: string, priority: number, changeFrequency: 'weekly' | 'monthly' | 'yearly' = 'monthly') => ({

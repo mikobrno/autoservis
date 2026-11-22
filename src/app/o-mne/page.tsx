@@ -10,7 +10,7 @@ import { business, instagramUrl } from '@/lib/contact';
 import { pageMetadata } from '@/lib/seo';
 
 export const metadata = pageMetadata({
-  title: `O mně – ${business.owner}, autoservis F-M`,
+  title: `O mně – ${business.owner}, autoservis Frýdek-Místek`,
   description:
     'Proč jsem založil vlastní autoservis ve Frýdku-Místku: po špatných zkušenostech se servisy chci místo, kde zákazník přesně ví, za co platí. Poctivě.',
   path: '/o-mne',

@@ -8,7 +8,7 @@ import PageHero from '@/components/PageHero';
 import Section from '@/components/ui/Section';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { formatDate, getJob, jobs } from '@/lib/jobs';
-import { pageMetadata } from '@/lib/seo';
+import { jobJsonLd, jsonLdScript, pageMetadata } from '@/lib/seo';
 import { getService } from '@/lib/services';
 
 type Props = { params: Promise<{ slug: string }> };
@@ -31,7 +31,8 @@ export async function generateMetadata({ params }: Props) {
   if (!job) return {};
   const title = `${job.car} – ${job.title}`;
   return pageMetadata({
-    title: title.length > 60 ? `${title.slice(0, 59).trimEnd()}…` : title,
+    // Řežeme na hranici slova, ať titulek nekončí uprostřed („diferenci…“).
+    title: title.length > 60 ? `${title.slice(0, 59).replace(/[\s,–-]+\S*$/, '')}…` : title,
     description: describe(job.car, job.problem),
     path: `/nase-prace/${job.slug}`,
   });
@@ -47,6 +48,7 @@ export default async function JobDetailPage({ params }: Props) {
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(jobJsonLd(job))} />
       <PageHero
         kicker={job.car}
         title={job.title}

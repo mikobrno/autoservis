@@ -42,7 +42,7 @@ export default function Footer() {
         </div>
 
         <div className="hidden md:block">
-          <h2 className="font-display text-lg font-bold uppercase tracking-wide">Servis</h2>
+          <p className="font-display text-lg font-bold uppercase tracking-wide">Servis</p>
           <ul className="mt-4 space-y-2 text-sm">
             {services.map((service) => (
               <li key={service.slug}>
@@ -65,7 +65,7 @@ export default function Footer() {
         </div>
 
         <div>
-          <h2 className="font-display text-lg font-bold uppercase tracking-wide">Kontakt</h2>
+          <p className="font-display text-lg font-bold uppercase tracking-wide">Kontakt</p>
           <ul className="mt-4 space-y-3 text-sm">
             <li>
               <a href={googleDirectionsUrl} target="_blank" rel="noopener noreferrer" className="inline-flex gap-2 py-1 text-fog transition-colors hover:text-white">
@@ -98,7 +98,7 @@ export default function Footer() {
         </div>
 
         <div>
-          <h2 className="font-display text-lg font-bold uppercase tracking-wide">Otevírací doba</h2>
+          <p className="font-display text-lg font-bold uppercase tracking-wide">Otevírací doba</p>
           <dl className="mt-4 space-y-2 text-sm">
             {openingHours.map((row) => (
               <div key={row.days} className="flex justify-between gap-6 border-b border-line pb-2">

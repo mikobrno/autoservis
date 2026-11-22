@@ -6,8 +6,9 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      // Poděkování po odeslání formuláře nemá v indexu co dělat.
-      disallow: ['/dekujeme', '/__forms.html'],
+      // /dekujeme tu záměrně není: má meta noindex a ten Google uvidí jen tehdy,
+      // když stránku smí projít.
+      disallow: ['/__forms.html'],
     },
     sitemap: `${siteUrl}/sitemap.xml`,
     host: siteUrl,

@@ -160,6 +160,28 @@ export const localBusinessJsonLd = () => ({
   knowsLanguage: 'cs',
 });
 
+/** Zakázka z dílny jako článek – Google tak pozná datum, autora a fotku. */
+export const jobJsonLd = (job: {
+  slug: string;
+  car: string;
+  title: string;
+  date: string;
+  problem: string;
+  image: { src: string };
+}) => ({
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: `${job.car} – ${job.title}`,
+  description: job.problem,
+  image: absoluteUrl(job.image.src),
+  datePublished: job.date,
+  dateModified: job.date,
+  inLanguage: 'cs-CZ',
+  author: { '@type': 'Person', name: business.owner, url: absoluteUrl('/o-mne') },
+  publisher: { '@id': businessId },
+  mainEntityOfPage: absoluteUrl(`/nase-prace/${job.slug}`),
+});
+
 export const webSiteJsonLd = () => ({
   '@context': 'https://schema.org',
   '@type': 'WebSite',
