@@ -47,7 +47,7 @@ Tón: 1. osoba jednotného čísla, vykání, krátké věty, konkrétní přík
 | Údaj | Hodnota | Zdroj / stav |
 |---|---|---|
 | Telefon | +420 774 883 911 | potvrdil Dennis 16. 11. 2026, i pro WhatsApp (starý web měl 737 020 324) |
-| Otevírací doba | Po–Pá 8–19, So 8–15, Ne zavřeno | Google profil |
+| Otevírací doba | Po–Pá 8–17, So 9–12, Ne zavřeno | Dennis 22. 11. 2026 (Google profil upravit) |
 | Hodnocení | 5,0 ★, 11 recenzí | Google, 16. 11. 2026 |
 | Google place ID | ChIJLyOX4fP3E0cRrmVonB1fySA | |
 | Instagram | @dk_autoservis_ | starý web |

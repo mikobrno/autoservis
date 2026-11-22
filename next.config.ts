@@ -41,6 +41,9 @@ const nextConfig: NextConfig = {
       { source: '/sluzby', destination: '/servis', permanent: true },
       { source: '/sluzby/:path*', destination: '/servis', permanent: true },
       { source: '/kontakty', destination: '/kontakt', permanent: true },
+      // Zbytky starého WordPressu ze sitemap (stav 22. 11. 2026).
+      { source: '/ahoj-vsichni', destination: '/', permanent: true },
+      { source: '/category/:path*', destination: '/', permanent: true },
       { source: '/wp-admin/:path*', destination: '/', permanent: true },
       { source: '/wp-login.php', destination: '/', permanent: true },
     ];

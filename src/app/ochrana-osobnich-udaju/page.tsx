@@ -41,8 +41,8 @@ export default function PrivacyPage() {
 
           <h2 className="font-display uppercase">Objednávkový formulář</h2>
           <p>
-            Když vyplníte formulář, zpracovávám údaje, které do něj napíšete: jméno, telefon, případně e-mail, údaje o autě
-            (typ, SPZ, odkaz na inzerát, kde auto stojí), požadovaný termín a zprávu. Potřebuji je, abych vám mohl potvrdit
+            Když vyplníte formulář, zpracovávám údaje, které do něj napíšete: jméno, telefon, údaje o autě (typ, SPZ, VIN,
+            fotku technického průkazu, odkaz na inzerát, kde auto stojí), požadovaný termín a zprávu. Potřebuji je, abych vám mohl potvrdit
             termín a připravit se na opravu nebo prověrku.
           </p>
           <ul>

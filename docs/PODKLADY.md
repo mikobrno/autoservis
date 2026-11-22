@@ -17,6 +17,7 @@ Stav k 16. 11. 2026. Vše je v kódu označené `// TODO(podklady)`.
       (Cebia / jiná služba — kdo ji platí?), dosah výjezdu („Frýdek-Místek a okolí" — kolik km?), cena dojezdu.
 - [ ] **Doba uchování údajů** v zásadách (navrženo 3 roky). → `ochrana-osobnich-udaju`
 - [ ] **Přístup k doméně autoservisdk.cz** (registrátor, DNS) a k současnému WordPress hostingu → přepojení na Netlify.
+- [ ] **Google profil:** přepsat otevírací dobu na Po–Pá 8–17, So 9–12 (Dennis změnil 22. 11. 2026, web už ji má).
 
 ## Hodilo by se
 

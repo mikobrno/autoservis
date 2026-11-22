@@ -13,13 +13,15 @@
       (src/components/ServiceRequestForm.tsx) na něj odesílá data přes fetch.
       Pole se musí jmenovat stejně jako ve formuláři.
     -->
-    <form name="objednavka" data-netlify="true" data-netlify-honeypot="company" hidden>
+    <form name="objednavka" data-netlify="true" data-netlify-honeypot="company" enctype="multipart/form-data" hidden>
       <input type="text" name="type" />
       <input type="text" name="name" />
       <input type="tel" name="phone" />
-      <input type="email" name="email" />
       <input type="text" name="car" />
       <input type="text" name="plate" />
+      <input type="text" name="vin" />
+      <!-- fotka zadní strany techničáku (nepovinná, u prověrky se neposílá) -->
+      <input type="file" name="techPhoto" accept="image/*" />
       <input type="url" name="listing" />
       <input type="text" name="location" />
       <input type="text" name="package" />

@@ -33,10 +33,13 @@ export const business = {
   vatPayer: false,
 };
 
-/** Otevírací doba podle Google profilu (stav k 16. 11. 2026). */
+/**
+ * Otevírací doba – změnil Dennis 22. 11. 2026 (dřív Po–Pá 8–19, So 8–15 podle Google profilu).
+ * Stejnou dobu musí mít i Google profil, jinak si web a Google odporují.
+ */
 export const openingHours: Array<{ days: string; schemaDays: string[]; opens: string | null; closes: string | null }> = [
-  { days: 'Po–Pá', schemaDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '08:00', closes: '19:00' },
-  { days: 'Sobota', schemaDays: ['Saturday'], opens: '08:00', closes: '15:00' },
+  { days: 'Po–Pá', schemaDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '08:00', closes: '17:00' },
+  { days: 'Sobota', schemaDays: ['Saturday'], opens: '09:00', closes: '12:00' },
   { days: 'Neděle', schemaDays: ['Sunday'], opens: null, closes: null },
 ];
 

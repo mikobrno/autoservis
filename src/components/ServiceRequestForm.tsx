@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useId, useRef, useState } from 'react';
 import { business, telHref } from '@/lib/contact';
 import { submitNetlifyForm } from '@/lib/netlifyForms';
+import { shrinkImage } from '@/lib/shrinkImage';
 
 export type RequestType = 'servis' | 'pneuservis' | 'proverka' | 'jine';
 
@@ -18,9 +19,9 @@ const typeLabels: Record<RequestType, string> = {
 const initialState = {
   name: '',
   phone: '',
-  email: '',
   car: '',
   plate: '',
+  vin: '',
   listing: '',
   location: '',
   package: '',
@@ -32,8 +33,13 @@ const initialState = {
  * Objednávkový formulář „objednavka“ (Netlify Forms). Pole jsou deklarovaná
  * v public/__forms.html – při přidání pole ho přidejte i tam.
  * Antispam: honeypot `company` + minimální doba vyplňování 3 s.
- * Fotky formulář záměrně nebere – na ty je WhatsApp (viz text pod formulářem).
+ *
+ * E-mail formulář nechce – Dennis zákazníkům e-mailem nepíše (22. 11. 2026).
+ * Místo toho chce VIN nebo fotku zadní strany techničáku, ať má údaje o autě
+ * na jednom místě a hned dohledá díly. Jiné fotky (závady, video) jdou přes
+ * WhatsApp – viz /dekujeme.
  */
+const MAX_PHOTO_BYTES = 6 * 1024 * 1024; // Netlify bere max. 8 MB na celé odeslání.
 export default function ServiceRequestForm({ defaultType = 'servis' }: { defaultType?: RequestType }) {
   const router = useRouter();
   const uid = useId();
@@ -43,6 +49,10 @@ export default function ServiceRequestForm({ defaultType = 'servis' }: { default
   const [consent, setConsent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [photoBusy, setPhotoBusy] = useState(false);
+  const [photoError, setPhotoError] = useState('');
+  const photoInput = useRef<HTMLInputElement>(null);
   const renderedAt = useRef<number | null>(null);
   useEffect(() => {
     renderedAt.current = Date.now();
@@ -54,8 +64,43 @@ export default function ServiceRequestForm({ defaultType = 'servis' }: { default
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  /** VIN se píše velkými písmeny bez mezer – opravíme rovnou při psaní. */
+  const handleVinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const vin = e.target.value.toUpperCase().replace(/\s+/g, '');
+    setFormData((prev) => ({ ...prev, vin }));
+  };
+
+  const clearPhoto = () => {
+    setPhoto(null);
+    if (photoInput.current) photoInput.current.value = '';
+  };
+
+  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    setPhotoError('');
+    if (!file) {
+      setPhoto(null);
+      return;
+    }
+    if (!file.type.startsWith('image/')) {
+      clearPhoto();
+      setPhotoError('Vyberte prosím fotku (JPG nebo PNG).');
+      return;
+    }
+    setPhotoBusy(true);
+    const small = await shrinkImage(file);
+    setPhotoBusy(false);
+    if (small.size > MAX_PHOTO_BYTES) {
+      clearPhoto();
+      setPhotoError('Fotka je moc velká. Pošlete mi ji prosím na WhatsApp.');
+      return;
+    }
+    setPhoto(small);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (photoBusy) return;
     if (renderedAt.current === null || Date.now() - renderedAt.current < 3000) return;
 
     setIsSubmitting(true);
@@ -65,7 +110,8 @@ export default function ServiceRequestForm({ defaultType = 'servis' }: { default
         type: typeLabels[type],
         ...formData,
         // Pole, která se k typu nehodí, neposíláme – notifikace je pak přehlednější.
-        ...(isInspection ? { plate: '' } : { listing: '', location: '', package: '' }),
+        ...(isInspection ? { plate: '', vin: '' } : { listing: '', location: '', package: '' }),
+        ...(!isInspection && photo ? { techPhoto: photo } : {}),
         consent: consent ? 'ano' : 'ne',
         company: honeypot,
         subject: `${typeLabels[type]} – ${formData.name}${formData.car ? `, ${formData.car}` : ''}`,
@@ -148,14 +194,6 @@ export default function ServiceRequestForm({ defaultType = 'servis' }: { default
         </div>
       </div>
 
-      <div>
-        <label className={labelCls} htmlFor={id('email')}>
-          E-mail
-        </label>
-        <input id={id('email')} name="email" type="email" autoComplete="email" value={formData.email} onChange={handleChange} className={inputCls} />
-        <p className={hintCls}>Nepovinné. {isInspection ? 'Pošlu na něj i report z prověrky.' : ''}</p>
-      </div>
-
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
           <label className={labelCls} htmlFor={id('car')}>
@@ -193,6 +231,72 @@ export default function ServiceRequestForm({ defaultType = 'servis' }: { default
           </div>
         )}
       </div>
+
+      {!isInspection && (
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label className={labelCls} htmlFor={id('vin')}>
+              VIN
+            </label>
+            <input
+              id={id('vin')}
+              name="vin"
+              type="text"
+              maxLength={17}
+              autoComplete="off"
+              autoCapitalize="characters"
+              spellCheck={false}
+              placeholder="17 znaků"
+              value={formData.vin}
+              onChange={handleVinChange}
+              aria-describedby={id('vin-hint')}
+              className={inputCls}
+            />
+            <p id={id('vin-hint')} className={hintCls}>
+              Nepovinné. Najdete ho v malém techničáku v kolonce E.
+            </p>
+          </div>
+          <div>
+            <label className={labelCls} htmlFor={id('techPhoto')}>
+              Fotka techničáku
+            </label>
+            <label
+              htmlFor={id('techPhoto')}
+              className={`flex min-h-[50px] cursor-pointer items-center gap-3 rounded-lg border border-dashed bg-white px-4 py-3 text-base transition has-[:focus-visible]:border-ink has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-amber/40 ${
+                photo ? 'border-ink/40 text-ink' : 'border-ink/25 text-slate hover:border-ink/50'
+              }`}
+            >
+              <input
+                ref={photoInput}
+                id={id('techPhoto')}
+                name="techPhoto"
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoChange}
+                aria-describedby={id('techPhoto-hint')}
+                className="sr-only"
+              />
+              <span className="min-w-0 truncate">
+                {photoBusy ? 'Načítám fotku…' : photo ? photo.name : 'Vyfotit nebo vybrat fotku'}
+              </span>
+            </label>
+            {photo && !photoBusy && (
+              <button type="button" onClick={clearPhoto} className="mt-1 text-xs font-semibold text-ink underline underline-offset-2">
+                Odebrat fotku
+              </button>
+            )}
+            {photoError ? (
+              <p role="alert" className="mt-1 text-xs font-semibold text-bad">
+                {photoError}
+              </p>
+            ) : (
+              <p id={id('techPhoto-hint')} className={hintCls}>
+                Nepovinné. Stačí zadní strana, kde jsou údaje o autě.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
 
       {isInspection && (
         <div className="grid gap-5 sm:grid-cols-2">
@@ -290,7 +394,7 @@ export default function ServiceRequestForm({ defaultType = 'servis' }: { default
 
       <button
         type="submit"
-        disabled={isSubmitting}
+        disabled={isSubmitting || photoBusy}
         className="w-full rounded-full bg-amber px-6 py-4 text-base font-bold text-ink transition-colors hover:bg-amber-dark disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isSubmitting ? 'Odesílám…' : isInspection ? 'Objednat prověrku' : 'Odeslat objednávku'}
