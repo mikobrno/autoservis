@@ -9,7 +9,7 @@ import ButtonLink from '@/components/ui/Button';
 import Section from '@/components/ui/Section';
 import SectionHeader from '@/components/ui/SectionHeader';
 import { business, waHref } from '@/lib/contact';
-import { jobs } from '@/lib/jobs';
+import { getJobs } from '@/lib/jobsStore';
 import { formatPrice, getPrice } from '@/lib/pricing';
 import { jsonLdScript, pageMetadata, serviceJsonLd } from '@/lib/seo';
 import { getService, services } from '@/lib/services';
@@ -17,6 +17,8 @@ import { getService, services } from '@/lib/services';
 type Props = { params: Promise<{ slug: string }> };
 
 export const dynamicParams = false;
+/** Zakázky si Dennis mění přes Telegram – bot stránku po změně přegeneruje sám, tohle je jen pojistka. */
+export const revalidate = 3600;
 
 export function generateStaticParams() {
   return services.map((service) => ({ slug: service.slug }));
@@ -35,7 +37,7 @@ export default async function ServiceDetailPage({ params }: Props) {
   if (!service) notFound();
 
   const price = getPrice(service.priceKey);
-  const relatedJobs = jobs.filter((job) => job.serviceSlug === service.slug);
+  const relatedJobs = (await getJobs()).filter((job) => job.serviceSlug === service.slug);
   const otherServices = services.filter((other) => other.slug !== service.slug);
 
   return (

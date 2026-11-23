@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { siteUrl } from '@/lib/contact';
-import { jobs } from '@/lib/jobs';
+import { getJobs } from '@/lib/jobsStore';
 import { services } from '@/lib/services';
 
 /**
@@ -10,7 +10,10 @@ import { services } from '@/lib/services';
  */
 const CONTENT_UPDATED = new Date('2026-11-22');
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const revalidate = 3600;
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const jobs = await getJobs();
   const page = (path: string, priority: number, changeFrequency: 'weekly' | 'monthly' | 'yearly' = 'monthly') => ({
     url: `${siteUrl}${path}`,
     lastModified: CONTENT_UPDATED,

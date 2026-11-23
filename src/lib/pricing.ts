@@ -114,7 +114,7 @@ export const priceGroups: PriceGroup[] = [
       { key: 'olej', name: 'Výměna oleje a filtru', price: 800, from: true, note: 'jen práce, bez ceny oleje a filtru' },
       { key: 'olej-dsg', name: 'Výměna oleje v převodovce DSG', price: null, from: true }, // TODO(podklady)
       { key: 'brzdy', name: 'Výměna brzdových destiček (náprava)', price: null, from: true }, // TODO(podklady)
-      { key: 'brzdy-kotouce', name: 'Výměna kotoučů a destiček', price: 1300, from: true }, // TODO(podklady): ověřit, jestli je to za nápravu
+      { key: 'brzdy-kotouce', name: 'Výměna kotoučů a destiček (náprava)', price: 1300, from: true, note: 'jen práce, bez dílů' }, // potvrdil Dennis 23. 11. 2026
       { key: 'podvozek', name: 'Výměna tlumičů (náprava)', price: null, from: true }, // TODO(podklady)
       { key: 'motor', name: 'Výměna klínového řemene a kladek', price: null, from: true }, // TODO(podklady)
       { key: 'stk', name: 'Příprava na STK (kontrola)', price: null, from: true }, // TODO(podklady)

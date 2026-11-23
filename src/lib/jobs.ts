@@ -1,7 +1,11 @@
 /**
  * Zakázky do sekce „Naše práce“. Texty převzaté ze starého webu
  * (autoservisdk.cz/nase-prace), převedené do 1. osoby. Datum = datum fotky.
- * Ve fázi 2 se zakázky budou přidávat z administrace (Supabase).
+ *
+ * Tohle je výchozí sada. Dennis si zakázky přidává a upravuje sám přes Telegram
+ * (bot, napíše mu „?“) – uložené jsou v Netlify Blobs, viz src/lib/jobsStore.ts.
+ * Jakmile tam nějaké jsou, platí ty a tenhle seznam slouží jen jako záloha.
+ * Na webu se zakázky čtou přes getJobs() z jobsStore, ne přímo odtud.
  */
 export type Job = {
   slug: string;
@@ -13,14 +17,16 @@ export type Job = {
   /** Co jsem našel a udělal. */
   work: string[];
   /** Ponaučení / proč to stojí za zmínku. */
-  takeaway: string;
+  takeaway?: string;
   tags: string[];
   image: { src: string; alt: string };
   /** Odkaz na související službu (/servis/[slug]). */
   serviceSlug?: string;
+  /** Skrytá zakázka se na webu neukazuje (Dennis ji schoval přes Telegram). */
+  hidden?: boolean;
 };
 
-export const jobs: Job[] = [
+export const staticJobs: Job[] = [
   {
     slug: 'skoda-octavia-3-tlumice-dsg-napinak',
     car: 'Škoda Octavia 3',
@@ -69,8 +75,6 @@ export const jobs: Job[] = [
     serviceSlug: 'podvozek',
   },
 ];
-
-export const getJob = (slug: string) => jobs.find((job) => job.slug === slug);
 
 export const formatDate = (iso: string) =>
   new Date(iso).toLocaleDateString('cs-CZ', { day: 'numeric', month: 'long', year: 'numeric' });

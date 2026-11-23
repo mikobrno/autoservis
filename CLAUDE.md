@@ -18,6 +18,9 @@ Závazný brief: `docs/BRIEF.md`. Design: `docs/DESIGN.md`. Chybějící podklad
 - Ukázkový report (`sampleReport` v `src/lib/inspection.ts`) je smyšlený — na webu musí být vždy označený jako ukázka.
 - Každá stránka: jeden H1, `pageMetadata()` ze `src/lib/seo.ts` (title ≤ 60 zn., description 120–155 zn., canonical).
 - Obsah jako data v `src/lib/*.ts`, komponenty bez natvrdo zapsaných kontaktů.
+- **Zakázky („Naše práce")** si Dennis přidává a upravuje sám přes Telegram (bot, napíše „?"). Uložené jsou
+  v Netlify Blobs, web je čte přes `getJobs()` z `src/lib/jobsStore.ts`; `src/lib/jobs.ts` je jen výchozí sada.
+  Z úložiště čti přes `readJson`/`readBinary` – `store.get()` na neexistující klíč na Netlify visí 30 s.
 - Formulář = Netlify Forms: nové pole přidej do `ServiceRequestForm.tsx` **i** do `public/__forms.html`.
 
 ## Příkazy

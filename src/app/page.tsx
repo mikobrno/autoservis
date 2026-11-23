@@ -19,7 +19,7 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import { business, formatHours, openingHours, waHref } from '@/lib/contact';
 import { homepageFaq } from '@/lib/faq';
 import { totalPoints } from '@/lib/inspection';
-import { jobs } from '@/lib/jobs';
+import { getJobs } from '@/lib/jobsStore';
 import { formatPrice, getPrice } from '@/lib/pricing';
 import { services } from '@/lib/services';
 
@@ -49,7 +49,11 @@ const rail =
   '-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-3 md:gap-6 md:overflow-visible md:px-0 md:pb-0 [&::-webkit-scrollbar]:hidden';
 const railItem = 'w-[78%] shrink-0 snap-start sm:w-[45%] md:w-auto';
 
-export default function HomePage() {
+/** Zakázky si Dennis mění přes Telegram – bot stránku po změně přegeneruje sám, tohle je jen pojistka. */
+export const revalidate = 3600;
+
+export default async function HomePage() {
+  const jobs = await getJobs();
   const weekday = openingHours[0];
   const saturday = openingHours[1];
 
@@ -234,7 +238,7 @@ export default function HomePage() {
           </Link>
         </div>
         <div className={`mt-8 ${rail}`}>
-          {jobs.map((job) => (
+          {jobs.slice(0, 6).map((job) => (
             <div key={job.slug} className={railItem}>
               <JobCard job={job} />
             </div>

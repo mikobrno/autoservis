@@ -7,15 +7,21 @@ import JobCard from '@/components/JobCard';
 import PageHero from '@/components/PageHero';
 import Section from '@/components/ui/Section';
 import SectionHeader from '@/components/ui/SectionHeader';
-import { formatDate, getJob, jobs } from '@/lib/jobs';
+import { formatDate } from '@/lib/jobs';
+import { getJob, getJobs } from '@/lib/jobsStore';
 import { jobJsonLd, jsonLdScript, pageMetadata } from '@/lib/seo';
 import { getService } from '@/lib/services';
 
 type Props = { params: Promise<{ slug: string }> };
 
-export const dynamicParams = false;
+// Nové zakázky přibývají přes Telegram bez nového buildu, proto se neznámý slug
+// zkusí vygenerovat až při prvním otevření (když neexistuje, vrátí 404).
+export const dynamicParams = true;
+/** Zakázky si Dennis mění přes Telegram – bot stránku po změně přegeneruje sám, tohle je jen pojistka. */
+export const revalidate = 3600;
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const jobs = await getJobs();
   return jobs.map((job) => ({ slug: job.slug }));
 }
 
@@ -27,7 +33,7 @@ const describe = (car: string, problem: string) => {
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-  const job = getJob(slug);
+  const job = await getJob(slug);
   if (!job) return {};
   const title = `${job.car} – ${job.title}`;
   return pageMetadata({
@@ -40,11 +46,11 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function JobDetailPage({ params }: Props) {
   const { slug } = await params;
-  const job = getJob(slug);
+  const job = await getJob(slug);
   if (!job) notFound();
 
   const service = job.serviceSlug ? getService(job.serviceSlug) : undefined;
-  const others = jobs.filter((other) => other.slug !== job.slug);
+  const others = (await getJobs()).filter((other) => other.slug !== job.slug).slice(0, 3);
 
   return (
     <>
@@ -59,7 +65,8 @@ export default async function JobDetailPage({ params }: Props) {
         ]}
       >
         <p className="mt-6 text-sm text-fog">
-          <time dateTime={job.date}>{formatDate(job.date)}</time> · {job.tags.join(' · ')}
+          <time dateTime={job.date}>{formatDate(job.date)}</time>
+          {job.tags.length > 0 && ` · ${job.tags.join(' · ')}`}
         </p>
       </PageHero>
 
@@ -85,10 +92,12 @@ export default async function JobDetailPage({ params }: Props) {
                 </li>
               ))}
             </ul>
-            <div className="mt-8 flex gap-3 rounded-[var(--radius-card)] bg-amber-soft p-5 text-ink">
-              <Lightbulb className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
-              <p className="leading-relaxed">{job.takeaway}</p>
-            </div>
+            {job.takeaway && (
+              <div className="mt-8 flex gap-3 rounded-[var(--radius-card)] bg-amber-soft p-5 text-ink">
+                <Lightbulb className="mt-0.5 h-5 w-5 shrink-0" aria-hidden="true" />
+                <p className="leading-relaxed">{job.takeaway}</p>
+              </div>
+            )}
             {service && (
               <Link
                 href={`/servis/${service.slug}`}

@@ -5,7 +5,7 @@ import PageHero from '@/components/PageHero';
 import ButtonLink from '@/components/ui/Button';
 import Section from '@/components/ui/Section';
 import { business, instagramUrl } from '@/lib/contact';
-import { jobs } from '@/lib/jobs';
+import { getJobs } from '@/lib/jobsStore';
 import { pageMetadata } from '@/lib/seo';
 
 export const metadata = pageMetadata({
@@ -15,8 +15,11 @@ export const metadata = pageMetadata({
   path: '/nase-prace',
 });
 
-export default function JobsPage() {
-  const sorted = [...jobs].sort((a, b) => b.date.localeCompare(a.date));
+/** Zakázky si Dennis mění přes Telegram – bot stránku po změně přegeneruje sám, tohle je jen pojistka. */
+export const revalidate = 3600;
+
+export default async function JobsPage() {
+  const sorted = await getJobs();
   return (
     <>
       <PageHero
