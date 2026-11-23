@@ -47,12 +47,13 @@ Tón: 1. osoba jednotného čísla, vykání, krátké věty, konkrétní přík
 | Údaj | Hodnota | Zdroj / stav |
 |---|---|---|
 | Telefon | +420 774 883 911 | potvrdil Dennis 16. 11. 2026, i pro WhatsApp (starý web měl 737 020 324) |
-| Otevírací doba | Po–Pá 8–17, So 9–12, Ne zavřeno | Dennis 22. 11. 2026 (Google profil upravit) |
-| Hodnocení | 5,0 ★, 11 recenzí | Google, 16. 11. 2026 |
+| Otevírací doba | Po–Pá 8–17, So 9–12, Ne zavřeno | Dennis 22. 11. 2026, Google profil má totéž (23. 11.) |
+| Hodnocení | 4,9 ★, 12 recenzí | Google, 23. 11. 2026 |
 | Google place ID | ChIJLyOX4fP3E0cRrmVonB1fySA | |
 | Instagram | @dk_autoservis_ | starý web |
-| IČO, e-mail | — | TODO(podklady) |
-| Ceny | — | TODO(podklady), web ukazuje „na dotaz" |
+| IČO | 30235685 | Dennis 23. 11. 2026, ověřeno v ARES (sídlo Pavlíkova 2460, F-M) |
+| E-mail | — | TODO(podklady) |
+| Ceny servisu | diagnostika 500 Kč (zdarma při opravě), olej a filtr od 800 Kč práce, kotouče a destičky od 1 300 Kč, práce 500 Kč/h | Dennis 23. 11. 2026; zbytek „na dotaz" |
 
 ## 5. Fáze
 

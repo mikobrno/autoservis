@@ -7,17 +7,23 @@ Stav k 16. 11. 2026. Vše je v kódu označené `// TODO(podklady)`.
 - [x] **Telefon:** +420 774 883 911 (potvrdil Dennis 16. 11. 2026, i pro WhatsApp). Starý web má ještě 737 020 324 –
       zmizí přepojením domény. Ověřit, že na Instagramu je stejné číslo.
 - [x] **WhatsApp** na hlavním čísle 774 883 911 – ano.
-- [ ] **IČO** a **e-mail** pro objednávky (+ e-mail pro notifikace z Netlify Forms). → `contact.ts`
+- [x] **IČO** 30235685 (Dennis 23. 11. 2026, ověřeno v ARES). → `contact.ts`
+- [ ] **E-mail** pro objednávky (Dennis schránku nemá; objednávky chodí do Telegramu).
+- [ ] **Telegram:** Dennis musí botovi @dkautoservis_objednavky_bot poslat /start, pak nastavit `TELEGRAM_CHAT_ID`
+      v Netlify (token už tam je jako tajná proměnná). Funkce: `netlify/functions/submission-created.mjs`.
+- [ ] **Doména:** u Active24 je jako vlastník uvedený vymyšlený „Patrik Kubala" – přepsat na Dennise.
 - [x] **Plátce DPH:** ne („Nejsme plátci DPH" – Dennisův ceník na Google profilu).
 - [x] **Ceník pneuservisu** – přepsán z Dennisova ceníku na Google profilu (`tyrePriceTables` v `src/lib/pricing.ts`).
       Ověřeno proti originálu ceníku v plném rozlišení (16. 11. 2026) – ceny i poznámky sedí.
-- [ ] **Ceník servisu a prověrky** – alespoň „od" ceny: diagnostika, výměna oleje, DSG olej, destičky, kotouče+destičky,
+- [x] Servis, část cen (Dennis 23. 11. 2026): diagnostika 500 Kč (zdarma při opravě), olej a filtr od 800 Kč práce,
+      kotouče a destičky od 1 300 Kč (ověřit, jestli za nápravu), mechanická práce 500 Kč/h.
+- [ ] **Ceník servisu a prověrky, zbytek** – alespoň „od" ceny: diagnostika, výměna oleje, DSG olej, destičky, kotouče+destičky,
       tlumiče, řemen+kladky, příprava na STK, prověrka (výjezd / dílna), hodinová sazba. → `src/lib/pricing.ts`
 - [ ] **Prověrka:** potvrdit checklist (`src/lib/inspection.ts`) — hlavně tloušťkoměr laku, prověření historie
       (Cebia / jiná služba — kdo ji platí?), dosah výjezdu („Frýdek-Místek a okolí" — kolik km?), cena dojezdu.
 - [ ] **Doba uchování údajů** v zásadách (navrženo 3 roky). → `ochrana-osobnich-udaju`
 - [ ] **Přístup k doméně autoservisdk.cz** (registrátor, DNS) a k současnému WordPress hostingu → přepojení na Netlify.
-- [ ] **Google profil:** přepsat otevírací dobu na Po–Pá 8–17, So 9–12 (Dennis změnil 22. 11. 2026, web už ji má).
+- [x] **Google profil:** otevírací doba Po–Pá 8–17, So 9–12 už na Googlu je (ověřeno 23. 11. 2026).
 
 ## Hodilo by se
 

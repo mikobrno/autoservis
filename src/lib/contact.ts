@@ -19,7 +19,7 @@ export const business = {
   // Potvrdil Dennis 16. 11. 2026 (stejné číslo je na Google profilu). Platí i pro WhatsApp.
   phone: '+420 774 883 911',
   email: '', // TODO(podklady): e-mail pro poptávky
-  ico: '', // TODO(podklady): IČO
+  ico: '30235685', // Poslal Dennis 23. 11. 2026, ověřeno v ARES.
   street: 'Palkovická 2204',
   city: 'Frýdek-Místek',
   postalCode: '738 01',
@@ -35,7 +35,7 @@ export const business = {
 
 /**
  * Otevírací doba – změnil Dennis 22. 11. 2026 (dřív Po–Pá 8–19, So 8–15 podle Google profilu).
- * Stejnou dobu musí mít i Google profil, jinak si web a Google odporují.
+ * Google profil má stejnou dobu (ověřeno 23. 11. 2026). Při změně upravit obojí.
  */
 export const openingHours: Array<{ days: string; schemaDays: string[]; opens: string | null; closes: string | null }> = [
   { days: 'Po–Pá', schemaDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '08:00', closes: '17:00' },
@@ -49,10 +49,10 @@ export const formatHours = (opens: string | null, closes: string | null) =>
 /** Google profil – hodnocení a odkazy na recenze. */
 export const google = {
   placeId: 'ChIJLyOX4fP3E0cRrmVonB1fySA',
-  rating: 5.0,
-  reviewCount: 11,
+  rating: 4.9,
+  reviewCount: 12,
   /** Kdy jsme hodnocení naposledy opsali z Googlu. Při změně počtu recenzí aktualizovat. */
-  checkedAt: '2026-11-16',
+  checkedAt: '2026-11-23',
 };
 
 export const googleReviewsUrl = `https://search.google.com/local/reviews?placeid=${google.placeId}`;

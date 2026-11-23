@@ -56,7 +56,8 @@ export default function PrivacyPage() {
             </li>
             <li>
               <strong>Kdo k nim má přístup:</strong> já a poskytovatel hostingu webu a formulářů Netlify, Inc. (zpracovatel,
-              přenos do USA na základě standardních smluvních doložek).
+              přenos do USA na základě standardních smluvních doložek). Upozornění na novou objednávku mi chodí do aplikace
+              Telegram (Telegram FZ-LLC).
             </li>
           </ul>
 

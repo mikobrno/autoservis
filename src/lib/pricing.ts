@@ -5,6 +5,7 @@
  * (Google profil, listopad 2026; ověřeno proti originálu v plném rozlišení). Při změně ceníku
  * upravit `tyrePriceTables` – souhrnné ceny „od" se z nich počítají samy.
  *
+ * Servis: diagnostiku, olej, kotouče s destičkami a hodinovou sazbu poslal Dennis 23. 11. 2026 (WhatsApp).
  * Servis a prověrka: dokud cena není potvrzená (`price: null`), web ukazuje
  * „na dotaz". Žádnou cenu si nevymýšlíme – viz CLAUDE.md.
  */
@@ -109,11 +110,11 @@ export const priceGroups: PriceGroup[] = [
     title: 'Servis a opravy',
     lead: 'Cenu opravy vám řeknu po prohlídce auta, ještě než začnu. Díly a náplně účtuji podle skutečnosti.',
     items: [
-      { key: 'diagnostika', name: 'Počítačová diagnostika', price: null, from: true }, // TODO(podklady)
-      { key: 'olej', name: 'Výměna oleje a filtru', price: null, from: true, note: 'bez ceny oleje a filtru' }, // TODO(podklady)
+      { key: 'diagnostika', name: 'Počítačová diagnostika', price: 500, note: 'zdarma, když pak auto opravuji já' },
+      { key: 'olej', name: 'Výměna oleje a filtru', price: 800, from: true, note: 'jen práce, bez ceny oleje a filtru' },
       { key: 'olej-dsg', name: 'Výměna oleje v převodovce DSG', price: null, from: true }, // TODO(podklady)
       { key: 'brzdy', name: 'Výměna brzdových destiček (náprava)', price: null, from: true }, // TODO(podklady)
-      { key: 'brzdy-kotouce', name: 'Výměna kotoučů a destiček (náprava)', price: null, from: true }, // TODO(podklady)
+      { key: 'brzdy-kotouce', name: 'Výměna kotoučů a destiček', price: 1300, from: true }, // TODO(podklady): ověřit, jestli je to za nápravu
       { key: 'podvozek', name: 'Výměna tlumičů (náprava)', price: null, from: true }, // TODO(podklady)
       { key: 'motor', name: 'Výměna klínového řemene a kladek', price: null, from: true }, // TODO(podklady)
       { key: 'stk', name: 'Příprava na STK (kontrola)', price: null, from: true }, // TODO(podklady)
@@ -133,7 +134,7 @@ export const priceGroups: PriceGroup[] = [
     title: 'Ostatní práce',
     lead: 'Práce, které nejdou ocenit paušálem, účtuji podle času. Odhad dostanete vždy předem.',
     items: [
-      { key: 'hodina', name: 'Hodinová sazba', price: null, unit: 'hod' }, // TODO(podklady)
+      { key: 'hodina', name: 'Hodinová sazba mechanické práce', price: 500, unit: 'hod' },
     ],
   },
 ];
