@@ -16,7 +16,10 @@ import { getService, services } from '@/lib/services';
 
 type Props = { params: Promise<{ slug: string }> };
 
-export const dynamicParams = false;
+// Musí být true: stránka se kvůli zakázkám přegenerovává (revalidate) a s `false`
+// ji Netlify po prvním přegenerování začne vracet jako 404 (stalo se 23. 11. 2026).
+// Neznámý slug stejně skončí na notFound() níže.
+export const dynamicParams = true;
 /** Zakázky si Dennis mění přes Telegram – bot stránku po změně přegeneruje sám, tohle je jen pojistka. */
 export const revalidate = 3600;
 
